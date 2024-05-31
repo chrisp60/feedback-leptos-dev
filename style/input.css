@@ -1,0 +1,271 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html,
+
+body
+{
+	@apply h-full overflow-hidden bg-surface-400 dark:bg-surface-950 txt-std-clr !important;
+}
+
+/* Text Sizes */
+@layer global
+{
+	h1
+	{
+		@apply text-2xl sm:text-3xl font-bold my-10 !important;
+	}
+
+	h2
+	{
+		@apply text-xl sm:text-2xl font-bold my-8 !important;
+	}
+
+	h3
+	{
+		@apply text-lg sm:text-xl font-bold my-6 !important;
+	}
+
+	h4
+	{
+		@apply text-base sm:text-lg font-bold my-4 !important;
+	}
+
+	h5
+	{
+		@apply text-sm sm:text-base font-bold my-2 !important;
+	}
+
+	h6
+	{
+		@apply text-xs sm:text-sm font-bold !important;
+	}
+}
+
+@layer base
+{
+	.h0
+	{
+		@apply text-3xl sm:text-4xl font-extrabold text-primary-900 dark:text-primary-500 !important;
+	}
+
+	/* Text Colours */
+	.txt-std-clr
+	{
+		@apply dark:text-gray-400 text-gray-900 !important;
+	}
+
+	.txt-mtd-clr
+	{
+		@apply dark:text-gray-500 text-gray-800 !important;
+	}
+
+	.txt-primary
+	{
+		@apply text-primary-800 dark:text-primary-500 !important;
+	}
+
+	.txt-secondary
+	{
+		@apply text-secondary-600 dark:text-secondary-500 !important;
+	}
+
+	.txt-tertiary
+	{
+		@apply text-tertiary-700 dark:text-tertiary-500 !important;
+	}
+
+	.txt-error
+	{
+		@apply text-error-500 dark:text-error-700 !important;
+	}
+
+	.txt-warning
+	{
+		@apply text-warning-500 dark:text-warning-700 !important;
+	}
+
+	.txt-success
+	{
+		@apply text-success-500 dark:text-success-700 !important;
+	}
+
+	/* Text Decoration */
+	.decor_line_through
+	{
+		@apply line-through !important;
+	}
+
+	/* Backgrounds */
+	.no-bg
+	{
+		@apply dark:bg-surface-800/0 bg-surface-500/0 !important;
+	}
+
+	.std-bg
+	{
+		@apply dark:bg-surface-800 bg-surface-500 !important;
+	}
+
+	/* Borders */
+	.std-bdr-2
+	{
+		@apply dark:border-surface-500 border-surface-700 border-2 !important;
+	}
+
+	/* Rings */
+	.std-ring-1
+	{
+		@apply dark:ring-surface-500 ring-surface-700 ring-1 rounded-xl !important;
+	}
+
+	.mtd-ring-1
+	{
+		@apply dark:ring-surface-700 ring-surface-700 ring-1 rounded-xl !important;
+	}
+
+	/* Text Sizes */
+	.std-txt-sz
+	{
+		@apply text-sm lg:text-base !important;
+	}
+
+	.sm-txt-sz
+	{
+		@apply text-xs lg:text-sm !important;
+	}
+
+	/* Hover Effects */
+	.std-hvr
+	{
+		@apply dark:hover:bg-surface-800 hover:bg-surface-400/50 !important;
+	}
+
+	/* Focus Effects */
+	.std-fcs
+	{
+		@apply dark:focus:border-gray-500 focus:border-gray-800 !important;
+	}
+
+	/* Placeholder */
+	.placeholder-clr
+	{
+		@apply dark:placeholder:text-gray-500 placeholder:text-gray-600 !important;
+	}
+
+	/* Text Areas */
+	.std_text_area
+	{
+		@apply dark:bg-surface-800 bg-surface-500 txt-std-clr std-txt-sz std-bdr-2 std-fcs rounded-xl ring-0 text-center mx-auto h-7 resize-y w-96;
+	}
+
+	/* Input Labels */
+	.input-label
+	{
+		@apply flex-wrap w-96 text-center mx-auto std-txt-sz !important;
+	}
+
+	/* Input Fields */
+	.input-fields
+	{
+		@apply std-bg txt-std-clr std-txt-sz h-7 std-bdr-2 std-fcs rounded-xl ring-0 text-center min-w-72 !important;
+	}
+
+	.sm-input-fields
+	{
+		@apply std-bg txt-std-clr std-txt-sz h-7 std-bdr-2 std-fcs rounded-xl ring-0 text-center w-80 !important;
+	}
+
+	.input-fields-noMatch
+	{
+		@apply dark:bg-red-900/60 bg-red-600/30 txt-std-clr std-txt-sz h-10 std-bdr-2 std-fcs rounded-xl ring-0 text-center w-96 mx-auto !important;
+	}
+
+	/* Margins */
+	.margin-bottom-3
+	{
+		@apply mb-3 !important;
+	}
+
+	.margin-top-3
+	{
+		@apply mt-3 !important;
+	}
+
+	.margin-bottom-5
+	{
+		@apply mb-5 !important;
+	}
+
+	.margin-top-5
+	{
+		@apply mt-5 !important;
+	}
+
+	.margin-bottom-8
+	{
+		@apply mb-8 !important;
+	}
+
+	.margin-top-8
+	{
+		@apply mt-8 !important;
+	}
+
+	/* Text Display */
+	.text-display
+	{
+		@apply std-bg txt-std-clr std-txt-sz std-bdr-2 rounded-xl ring-0 text-center mx-auto !important;
+
+	}
+
+	/* Radio Buttons */
+	.std-radio-group
+	{
+		@apply no-bg border-0 flex flex-wrap w-max !important;
+	}
+
+	.col-radio-group
+	{
+		@apply no-bg border-0 flex flex-col w-max mx-auto !important;
+	}
+
+	.std-radio-item
+	{
+		@apply std-bg txt-std-clr std-txt-sz std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 mb-4 !important;
+	}
+
+	.col-radio-item
+	{
+		@apply std-bg txt-std-clr std-txt-sz std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 mb-4 !important;
+	}
+
+	/* Buttons */
+	.std-btn
+	{
+		@apply std-bg txt-std-clr std-txt-sz std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 px-4 py-1 !important;
+	}
+
+	.sm-btn
+	{
+		@apply std-bg txt-std-clr sm-txt-sz std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 px-1 !important;
+	}
+
+	/* Lightswitch */
+	.lightswitch-track
+	{
+		@apply dark:bg-surface-800 bg-surface-500 std-ring-1 !important;
+	}
+
+	.lightswitch-thumb
+	{
+		@apply dark:bg-surface-500 bg-surface-700 !important;
+	}
+
+	.lightswitch-icon
+	{
+		@apply dark:bg-surface-500 bg-surface-500 dark:fill-gray-200 fill-amber-400 !important;
+	}
+}

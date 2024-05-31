@@ -13,7 +13,7 @@ pub(crate) fn TestPage() -> impl IntoView
 			     let content = std::fs::read_to_string(filename).unwrap();
 			     view! {
 					 <Tab index>
-						 <div style="background-color: lightblue; padding: 10px">
+						 <div>
 							 <h2>{filename.to_string()}</h2>
 							 <p>{content}</p>
 						 </div>
@@ -24,11 +24,11 @@ pub(crate) fn TestPage() -> impl IntoView
 	};
 
 	view! {
-		<h1>"Welcome to Leptos!"</h1>
+		<h1 class="text-center">"Welcome to Leptos!"</h1>
 
 		<Counter/>
 
-		<p>"Click any of the tabs below to read a recipe."</p>
+		<h2 class="text-center">"Click any of the tabs below to read a recipe."</h2>
 		<Tabs labels>
 			<div>{tabs()}</div>
 		</Tabs>
@@ -42,7 +42,16 @@ fn Counter() -> impl IntoView
 	let (count, set_count) = create_signal(0);
 	let on_click = move |_| set_count.update(|count| *count += 1);
 
-	view! { <button on:click=on_click>"Click Me: " {count}</button> }
+	view! {
+		<div class="text-center">
+			<h2>"Counter"</h2>
+
+			<button class="std-btn" on:click=on_click>
+				"Click Me: "
+				{count}
+			</button>
+		</div>
+	}
 }
 
 #[island]
@@ -51,9 +60,8 @@ fn Tab(index: usize, children: Children) -> impl IntoView
 	let selected = expect_context::<ReadSignal<usize>>();
 	view! {
 		<div
-			style:background-color="lightgreen"
-			style:padding="10px"
-			style:display=move || if selected() == index { "block" } else { "none" }
+			class="text-center"
+			style:display=move || { if selected() == index { "block" } else { "none" } }
 		>
 
 			{children()}
@@ -70,12 +78,15 @@ fn Tabs(labels: Vec<String>, children: Children) -> impl IntoView
 	let buttons = labels.into_iter()
 	                    .enumerate()
 	                    .map(|(index, label)| {
-		                    view! { <button on:click=move |_| set_selected(index)>{label}</button> }
+		                    view! {
+								<button class="std-btn" on:click=move |_| set_selected(index)>
+									{label}
+								</button>
+							}
 	                    })
 	                    .collect_view();
 	view! {
-		<div style="display: flex; width: 100%; justify-content: space-around;\
-		background-color: lightgreen; padding: 10px;">{buttons}</div>
+		<div class="text-center space-x-4">{buttons}</div>
 		{children()}
 	}
 }

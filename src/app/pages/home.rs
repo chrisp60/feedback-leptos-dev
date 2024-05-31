@@ -35,6 +35,12 @@ pub(crate) fn HomePage() -> impl IntoView
 					"Register"
 				</a>
 			</div>
+
+			<div class="margin-top-5">
+				<a href="/test" class="std-btn">
+					"Test Page"
+				</a>
+			</div>
 		</div>
 	}
 }

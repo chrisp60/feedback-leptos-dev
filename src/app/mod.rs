@@ -20,7 +20,7 @@ pub fn App() -> impl IntoView
 
 		// content for this welcome page
 		<Router>
-			<main style="background-color: lightblue; padding: 10px">
+			<main>
 				<Routes>
 					<Route path="" view=HomePage/>
 					<Route path="/test" view=TestPage/>
