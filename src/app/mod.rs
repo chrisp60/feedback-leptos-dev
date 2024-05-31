@@ -4,7 +4,11 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::pages::{home::HomePage, test::TestPage, NotFound};
+use crate::app::pages::{dash::DashboardPage,
+                        home::HomePage,
+                        test::TestPage,
+                        user::{login::LoginPage, register::RegisterPage},
+                        NotFound};
 
 #[component]
 pub fn App() -> impl IntoView
@@ -23,6 +27,9 @@ pub fn App() -> impl IntoView
 			<main>
 				<Routes>
 					<Route path="" view=HomePage/>
+					<Route path="/login" view=LoginPage/>
+					<Route path="/register" view=RegisterPage/>
+					<Route path="/dash" view=DashboardPage ssr=SsrMode::PartiallyBlocked/>
 					<Route path="/test" view=TestPage/>
 					<Route path="/*any" view=NotFound/>
 				</Routes>

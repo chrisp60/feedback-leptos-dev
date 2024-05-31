@@ -16,27 +16,27 @@ pub(crate) fn HomePage() -> impl IntoView
 
 		<Title text="LeptosDev"/>
 
-		<div class="text-center margin-top-8">
-			<p class="h0">"Leptos Dev!"</p>
-			<h2 class="txt-primary margin-top-5">"Some text about the app"</h2>
+		<div class="text-center">
+			<p class="h0 m-t-10">"Leptos Dev!"</p>
+			<h2 class="txt-primary m-t-8">"Some text about the app"</h2>
 
-			<h4 class="txt-tertiary margin-top-3">"More text about the app"</h4>
+			<h4 class="txt-tertiary m-t-6">"More text about the app"</h4>
 
-			<div class="margin-top-5">
+			<div class="m-t-6 space-x-6">
 				<a href="/login" class="std-btn">
 					"Login"
 				</a>
-			</div>
 
-			<h6 class="txt-tertiary margin-top-3">"or"</h6>
-
-			<div class="margin-top-3">
 				<a href="/register" class="std-btn" type="submit">
 					"Register"
 				</a>
 			</div>
 
-			<div class="margin-top-5">
+			<h6 class="txt-tertiary m-t-6">"or"</h6>
+
+			<div class="m-t-6"></div>
+
+			<div class="m-t-6">
 				<a href="/test" class="std-btn">
 					"Test Page"
 				</a>

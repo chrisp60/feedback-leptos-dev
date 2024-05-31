@@ -20,22 +20,22 @@ body
 
 	h2
 	{
-		@apply text-xl sm:text-2xl font-bold my-8 !important;
+		@apply text-xl sm:text-2xl font-bold !important;
 	}
 
 	h3
 	{
-		@apply text-lg sm:text-xl font-bold my-6 !important;
+		@apply text-lg sm:text-xl font-bold !important;
 	}
 
 	h4
 	{
-		@apply text-base sm:text-lg font-bold my-4 !important;
+		@apply text-base sm:text-lg font-bold !important;
 	}
 
 	h5
 	{
-		@apply text-sm sm:text-base font-bold my-2 !important;
+		@apply text-sm sm:text-base font-bold !important;
 	}
 
 	h6
@@ -184,34 +184,54 @@ body
 	}
 
 	/* Margins */
-	.margin-bottom-3
+	.m-b-2
 	{
-		@apply mb-3 !important;
+		@apply mb-2 !important;
 	}
 
-	.margin-top-3
+	.m-t-2
 	{
-		@apply mt-3 !important;
+		@apply mt-2 !important;
 	}
 
-	.margin-bottom-5
+	.m-b-4
 	{
-		@apply mb-5 !important;
+		@apply mb-4 !important;
 	}
 
-	.margin-top-5
+	.m-t-4
 	{
-		@apply mt-5 !important;
+		@apply mt-4 !important;
 	}
 
-	.margin-bottom-8
+	.m-b-6
+	{
+		@apply mb-6 !important;
+	}
+
+	.m-t-6
+	{
+		@apply mt-6 !important;
+	}
+
+	.m-b-8
 	{
 		@apply mb-8 !important;
 	}
 
-	.margin-top-8
+	.m-t-8
 	{
 		@apply mt-8 !important;
+	}
+
+	.m-b-10
+	{
+		@apply mb-10 !important;
+	}
+
+	.m-t-10
+	{
+		@apply mt-10 !important;
 	}
 
 	/* Text Display */
