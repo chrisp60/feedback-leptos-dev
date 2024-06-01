@@ -5,14 +5,15 @@ edition = "2021"
 
 [workspace]
 resolver = "2"
-members  = [".", "ls_entity"]
+members  = [".", "ls_entity", "ls_service"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 
-ls_entity = { path = "ls_entity", optional = true }
+ls_entity  = { path = "ls_entity", optional = true }
+ls_service = { path = "ls_service", optional = true }
 
 actix-files              = { version = "0.6", optional = true }
 actix-web                = { version = "4", optional = true, features = ["macros"] }
@@ -42,6 +43,7 @@ ssr = [
     "leptos-use/ssr",
     "leptos-use/actix",
     "dep:ls_entity",
+    "dep:ls_service",
 
 ]
 
