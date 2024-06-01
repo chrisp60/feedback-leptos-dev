@@ -5,19 +5,36 @@ async fn main() -> std::io::Result<()> {
     use actix_web::*;
     use leptos::*;
     use leptos_actix::{generate_route_list, LeptosRoutes};
-    use leptos_dev::app::*;
+    use leptos_dev::app::{*, state::AppState};
+    use ls_service::sea_orm::Database;
+	use migration::{Migrator, MigratorTrait};
 
+    std::env::set_var("RUST_LOG", "debug");
+	tracing_subscriber::fmt::init();
+
+    dotenvy::dotenv().ok();
+	let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+
+    // establish connection to database and apply migrations
+	let conn = Database::connect(&db_url).await.unwrap();
+	Migrator::up(&conn, None).await.unwrap();
+
+   	// get configurations
     let conf = get_configuration(None).await.unwrap();
     let addr = conf.leptos_options.site_addr;
+
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
     println!("listening on http://{}", &addr);
+
+    let state = AppState { conn };
 
     HttpServer::new(move || {
         let leptos_options = &conf.leptos_options;
         let site_root = &leptos_options.site_root;
 
         App::new()
+        .app_data(web::Data::new(state.clone()))
             // serve JS/WASM/CSS from `pkg`
             .service(Files::new("/pkg", format!("{site_root}/pkg")))
             // serve other assets from the `assets` directory

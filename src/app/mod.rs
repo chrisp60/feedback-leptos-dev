@@ -1,3 +1,6 @@
+#[cfg(feature = "ssr")]
+pub mod state;
+
 mod pages;
 
 use leptos::*;
@@ -9,6 +12,8 @@ use crate::app::pages::{dash::DashboardPage,
                         test::TestPage,
                         user::{login::LoginPage, register::RegisterPage},
                         NotFound};
+
+
 
 #[component]
 pub fn App() -> impl IntoView
@@ -29,7 +34,7 @@ pub fn App() -> impl IntoView
 					<Route path="" view=HomePage/>
 					<Route path="/login" view=LoginPage/>
 					<Route path="/register" view=RegisterPage/>
-					<Route path="/dash" view=DashboardPage ssr=SsrMode::PartiallyBlocked/>
+					<Route path="/dash" view=DashboardPage/>
 					<Route path="/test" view=TestPage/>
 					<Route path="/*any" view=NotFound/>
 				</Routes>
