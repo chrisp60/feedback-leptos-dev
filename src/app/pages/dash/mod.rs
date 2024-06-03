@@ -2,7 +2,6 @@ pub mod dashboard;
 
 use leptos::*;
 use leptos_meta::Title;
-use ls_service::mutation::user;
 
 use crate::server_fns::user::check_auth_token;
 

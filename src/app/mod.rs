@@ -7,7 +7,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::pages::{auth::dashboard::{DashOptions, DashboardPage},
+use crate::app::pages::{dash::dashboard::{DashOptions, DashboardPage},
                         home::HomePage,
                         test::TestPage,
                         user::{login::LoginPage, register::RegisterPage},
