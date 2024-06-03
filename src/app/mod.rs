@@ -1,20 +1,17 @@
 #[cfg(feature = "ssr")]
 pub mod state;
 
-mod pages;
+pub(crate) mod pages;
 
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::app::pages::{dash::DashboardPage,
+use crate::app::pages::{auth::dashboard::{DashOptions, DashboardPage},
                         home::HomePage,
                         test::TestPage,
                         user::{login::LoginPage, register::RegisterPage},
                         NotFound};
-
-
-
 #[component]
 pub fn App() -> impl IntoView
 {
@@ -34,7 +31,9 @@ pub fn App() -> impl IntoView
 					<Route path="" view=HomePage/>
 					<Route path="/login" view=LoginPage/>
 					<Route path="/register" view=RegisterPage/>
-					<Route path="/dash" view=DashboardPage/>
+					<Route path="/dash" view=DashboardPage>
+						<Route path="/" view=DashOptions/>
+					</Route>
 					<Route path="/test" view=TestPage/>
 					<Route path="/*any" view=NotFound/>
 				</Routes>

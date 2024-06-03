@@ -37,8 +37,8 @@ pub(crate) fn HomePage() -> impl IntoView
 			<div class="m-t-6"></div>
 
 			<div class="m-t-6">
-				<a href="/test" class="std-btn">
-					"Test Page"
+				<a href="/dash" class="std-btn">
+					"Dash Page"
 				</a>
 			</div>
 		</div>
