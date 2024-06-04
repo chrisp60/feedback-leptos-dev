@@ -1,6 +1,6 @@
 use super::*;
 
-#[server(UserLogin, "/api/login")]
+#[server(UserLogin, "/auth/login")]
 pub async fn login(identity: String, password: String) -> Result<(), ServerFnError<LoginError>>
 {
 	use actix_web::{cookie::{time::Duration, Cookie},
@@ -50,6 +50,8 @@ pub async fn login(identity: String, password: String) -> Result<(), ServerFnErr
 	// }
 
 	leptos_actix::redirect("/dash");
+
+	println!("Login successful, redirecting to dashboard");
 
 	Ok(())
 }
