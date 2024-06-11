@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::*;
 
-#[server(UserLogout, "/api/logout")]
+#[server(UserLogout, "/auth/logout")]
 pub async fn logout_user() -> Result<(), ServerFnError<LogOutError>>
 {
 	use actix_web::{cookie::{time::{Duration, OffsetDateTime},
@@ -13,14 +13,15 @@ pub async fn logout_user() -> Result<(), ServerFnError<LogOutError>>
 	println!("Logging Out");
 
 	let response = expect_context::<ResponseOptions>();
-	let cookie = Cookie::build("leptos_access_token", "".to_string()).path("/").http_only(true).expires(OffsetDateTime::now_utc() - Duration::days(1)).finish();
+	let cookie =
+		Cookie::build("leptos_access_token", "".to_string()).path("/auth").http_only(true).expires(OffsetDateTime::now_utc() - Duration::days(1)).finish();
 
 	if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
 	{
 		response.insert_header(header::SET_COOKIE, cookie);
 	}
 
-	leptos_actix::redirect("/login");
+	leptos_actix::redirect("/auth/login");
 
 	Ok(())
 }

@@ -23,11 +23,11 @@ pub(crate) fn HomePage() -> impl IntoView
 			<h4 class="txt-tertiary m-t-6">"More text about the app"</h4>
 
 			<div class="m-t-6 space-x-6">
-				<a href="/login" class="std-btn">
+				<a href="/auth/login" class="std-btn">
 					"Login"
 				</a>
 
-				<a href="/register" class="std-btn" type="submit">
+				<a href="auth/register" class="std-btn" type="submit">
 					"Register"
 				</a>
 			</div>
@@ -37,7 +37,7 @@ pub(crate) fn HomePage() -> impl IntoView
 			<div class="m-t-6"></div>
 
 			<div class="m-t-6">
-				<a href="/dash" class="std-btn">
+				<a href="/dashboard" class="std-btn">
 					"Dash Page"
 				</a>
 			</div>

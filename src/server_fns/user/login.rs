@@ -49,7 +49,7 @@ pub async fn login(identity: String, password: String) -> Result<(), ServerFnErr
 	// 	token_set(Some(cookie.to_string()));
 	// }
 
-	leptos_actix::redirect("/dash");
+	leptos_actix::redirect("/dashboard");
 
 	println!("Login successful, redirecting to dashboard");
 

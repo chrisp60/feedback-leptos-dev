@@ -1,4 +1,3 @@
-pub mod auth;
 pub mod dash;
 pub mod home;
 pub mod test;
