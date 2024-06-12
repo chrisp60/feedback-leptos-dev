@@ -14,6 +14,18 @@ impl UserQuery
 		User::find_by_id(id).one(db).await
 	}
 
+	// Find user by email
+	pub async fn find_user_by_email(db: &DbConn, email: &str) -> Result<Option<user::Model>, DbErr>
+	{
+		User::find().filter(user::Column::Email.eq(email)).one(db).await
+	}
+
+	// Find user by username
+	pub async fn find_user_by_username(db: &DbConn, username: &str) -> Result<Option<user::Model>, DbErr>
+	{
+		User::find().filter(user::Column::Username.eq(username)).one(db).await
+	}
+
 	// Find all users
 	pub async fn find_all_users(db: &DbConn) -> Result<Vec<user::Model>, DbErr>
 	{

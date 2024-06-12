@@ -1,6 +1,6 @@
 use super::*;
 
-#[server(UserLogin, "/auth/login")]
+#[server(UserLogin, "/login")]
 pub async fn login(identity: String, password: String) -> Result<(), ServerFnError<LoginError>>
 {
 	use actix_web::{cookie::{time::Duration, Cookie},

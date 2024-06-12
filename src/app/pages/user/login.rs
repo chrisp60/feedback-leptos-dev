@@ -1,3 +1,6 @@
+use log::info;
+use web_sys::HtmlButtonElement;
+
 use super::*;
 use crate::server_fns::user::login::UserLogin;
 
@@ -35,6 +38,30 @@ pub fn LoginPage() -> impl IntoView
 
 	let mut show_password = false;
 	let (read_ptype, write_ptype) = create_signal("password");
+
+	let mut toggle_show = move |_| {
+		show_password = !show_password;
+		if show_password
+		{
+			write_ptype.set("text")
+		}
+		else
+		{
+			write_ptype.set("password")
+		}
+	};
+
+	// let mut change_password_visibility = move |_| {
+	// 	show_password = !show_password;
+	// 	if show_password
+	// 	{
+	// 		write_ptype.set("text")
+	// 	}
+	// 	else
+	// 	{
+	// 		write_ptype.set("password")
+	// 	}
+	// };
 
 	view! {
 		<div class="bg-primary-900 text-white">
@@ -94,23 +121,6 @@ pub fn LoginPage() -> impl IntoView
 					/>
 				</div>
 
-				<button
-					class="text-xs sm-btn"
-					type="button"
-					on:click=move |_| {
-						show_password = !show_password;
-						if show_password {
-							write_ptype.set("text")
-						} else {
-							write_ptype.set("password")
-						}
-					}
-				>
-
-					"Show Password"
-				</button>
-
-				<br/>
 				<br/>
 
 				<div>
@@ -119,113 +129,131 @@ pub fn LoginPage() -> impl IntoView
 					</button>
 				</div>
 			</ActionForm>
+			<br/>
+			<button
+				id="show_password"
+				on:click=move |ev| {
+					if event_target::<web_sys::HtmlButtonElement>(&ev).id() == "show_password" {
+						info!("Button clicked");
+					} else {
+						info!("Button not clicked");
+					}
+					toggle_show(ev);
+				}
+			>
+
+				"Show Password"
+			</button>
+			<br/>
+			{show_password}
+
 		</div>
 	}.into_view()
 }
 
-#[island]
-fn Log() -> impl IntoView
-{
-	let user_login_action = create_server_action::<UserLogin>();
+// #[island]
+// fn Log() -> impl IntoView
+// {
+// 	let user_login_action = create_server_action::<UserLogin>();
 
-	let err = Signal::derive(move || {
-		(user_login_action.value())().map_or("".to_owned(), |result| {
-			                             match result
-			                             {
-				                             Ok(a) =>
-			                                 {
-				                                 return "Success:- User authenticated".to_string();
-			                                 }
-			                                 Err(err) =>
-			                                 {
-				                                 let e = format!("{:?}", err);
+// 	let err = Signal::derive(move || {
+// 		(user_login_action.value())().map_or("".to_owned(), |result| {
+// 			                             match result
+// 			                             {
+// 				                             Ok(a) =>
+// 			                                 {
+// 				                                 return "Success:- User authenticated".to_string();
+// 			                                 }
+// 			                                 Err(err) =>
+// 			                                 {
+// 				                                 let e = format!("{:?}", err);
 
-				                                 if e.contains("NoUserFound")
-				                                 {
-					                                 return "Error:- Unable to find a user with those credentials. Please check and try again!".to_string();
-				                                 }
-				                                 else
-				                                 {
-					                                 return "Error:- Unknown error occurred.".to_string();
-				                                 }
-			                                 }
-			                             }
-		                             })
-	});
+// 				                                 if e.contains("NoUserFound")
+// 				                                 {
+// 					                                 return "Error:- Unable to find a user with those credentials. Please check and try again!".to_string();
+// 				                                 }
+// 				                                 else
+// 				                                 {
+// 					                                 return "Error:- Unknown error occurred.".to_string();
+// 				                                 }
+// 			                                 }
+// 			                             }
+// 		                             })
+// 	});
 
-	let mut show_password = false;
-	let (read_ptype, write_ptype) = create_signal("password");
+// 	let mut show_password = false;
+// 	let (read_ptype, write_ptype) = create_signal("password");
 
-	view! {
-		<Show when=move || err.get().contains("Success")>
-			<div class="txt-success text-center font-bold mt-10">{err}</div>
-		</Show>
-		<Show when=move || err.get().contains("Error")>
-			<div class="txt-error text-center font-bold mt-10">{err}</div>
-		</Show>
+// 	view! {
+// 		<Show when=move || err.get().contains("Success")>
+// 			<div class="txt-success text-center font-bold mt-10">{err}</div>
+// 		</Show>
+// 		<Show when=move || err.get().contains("Error")>
+// 			<div class="txt-error text-center font-bold mt-10">{err}</div>
+// 		</Show>
 
-		<div class="container mx-auto columns-1 text-center mt-10">
-			<ActionForm action=user_login_action>
+// 		<div class="container mx-auto columns-1 text-center mt-10">
+// 			<ActionForm action=user_login_action>
 
-				<div>
-					<label class="input-label" for="identity">
-						"Username or Email"
-					</label>
-				</div>
-				<div>
-					<input
-						class="input-fields"
-						type="text"
-						class="ml-9"
-						name="identity"
-						id="identity"
-						required
-					/>
-				</div>
+// 				<div>
+// 					<label class="input-label" for="identity">
+// 						"Username or Email"
+// 					</label>
+// 				</div>
+// 				<div>
+// 					<input
+// 						class="input-fields"
+// 						type="text"
+// 						class="ml-9"
+// 						name="identity"
+// 						id="identity"
+// 						required
+// 					/>
+// 				</div>
 
-				<br/>
+// 				<br/>
 
-				<div>
-					<label class="input-label" for="password">
-						"Password"
-					</label>
-				</div>
-				<div>
-					<input
-						class="input-fields"
-						type=read_ptype
-						class="ml-10"
-						name="password"
-						id="password"
-						required
-					/>
-				</div>
+// 				<div>
+// 					<label class="input-label" for="password">
+// 						"Password"
+// 					</label>
+// 				</div>
+// 				<div>
+// 					<input
+// 						class="input-fields"
+// 						type=read_ptype
+// 						class="ml-10"
+// 						name="password"
+// 						id="password"
+// 						required
+// 					/>
+// 				</div>
 
-				<button
-					class="text-xs sm-btn"
-					type="button"
-					on:click=move |_| {
-						show_password = !show_password;
-						if show_password {
-							write_ptype.set("text")
-						} else {
-							write_ptype.set("password")
-						}
-					}
-				>
+// 				<button
+// 					class="text-xs sm-btn"
+// 					type="button"
+// 					on:click=move |_| {
+// 						show_password = !show_password;
+// 						if show_password {
+// 							write_ptype.set("text")
+// 						} else {
+// 							write_ptype.set("password")
+// 						}
+// 					}
+// 				>
 
-					"Show Password"
-				</button>
+// 					"Show Password"
+// 				</button>
 
-				<br/>
-				<br/>
+// 				<br/>
+// 				<br/>
 
-				<div>
-					<button class="std-btn" type="submit">
-						"Login"
-					</button>
-				</div>
-			</ActionForm>
-		</div>
-	}
-}
+// 				<div>
+// 					<button class="std-btn" type="submit">
+// 						"Login"
+// 					</button>
+// 				</div>
+// 			</ActionForm>
+// 		</div>
+// 	}
+// }
