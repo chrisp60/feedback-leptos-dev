@@ -88,6 +88,13 @@ fn Counters() -> impl IntoView
 	});
 
 	view! {
+		<Show when=move || err.get().contains("Success")>
+			<div class="txt-success text-center font-bold mt-10">{err}</div>
+		</Show>
+		<Show when=move || err.get().contains("Error")>
+			<div class="txt-error text-center font-bold mt-10">{err}</div>
+		</Show>
+
 		<div class="container mx-auto columns-1 text-center mt-10">
 			<ActionForm action=user_login_action>
 				<div>
