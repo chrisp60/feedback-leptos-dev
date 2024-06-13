@@ -1,6 +1,3 @@
-use log::info;
-use web_sys::HtmlButtonElement;
-
 use super::*;
 use crate::server_fns::user::login::UserLogin;
 
@@ -19,21 +16,13 @@ pub fn LoginPage() -> impl IntoView
 		<Title text="Login"/>
 
 		<p class="h0 m-t-10 text-center">"Login"</p>
-		// <Log/>
 
-		// <Show when=move || err.get().contains("Success")>
-		// <div class="txt-success text-center font-bold mt-10">{err}</div>
-		// </Show>
-		// <Show when=move || err.get().contains("Error")>
-		// <div class="txt-error text-center font-bold mt-10">{err}</div>
-		// </Show>
-
-		<Counters/>
+		<Log/>
 	}.into_view()
 }
 
 #[island]
-fn Counters() -> impl IntoView
+fn Log() -> impl IntoView
 {
 	let user_login_action = create_server_action::<UserLogin>();
 
@@ -61,23 +50,25 @@ fn Counters() -> impl IntoView
 			                             }
 		                             })
 	});
+
 	// Creates a reactive value to update the button
-	let (count, set_count) = create_signal(0);
+	let (show, set_show) = create_signal(0);
 	let on_click = move |_| {
-		set_count.update(|count| {
-			         if *count == 0
-			         {
-				         *count += 1;
-			         }
-			         else
-			         {
-				         *count -= 1;
-			         }
-		         });
+		set_show.update(|show| {
+			        if *show == 0
+			        {
+				        *show += 1;
+			        }
+			        else
+			        {
+				        *show -= 1;
+			        }
+		        });
 	};
 
+	// assign the value of the password field type
 	let show_password = Signal::derive(move || {
-		if count.get() == 0
+		if show.get() == 0
 		{
 			"password"
 		}
@@ -113,7 +104,7 @@ fn Counters() -> impl IntoView
 					/>
 				</div>
 
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="password">
 						"Password"
 					</label>
@@ -130,11 +121,13 @@ fn Counters() -> impl IntoView
 					/>
 				</div>
 
-				<button class="std-btn" type="button" on:click=on_click>
-					"Click Me: "
-				</button>
-
 				<div>
+					<button class="sm-btn" type="button" on:click=on_click>
+						"Show Password"
+					</button>
+				</div>
+
+				<div class="mt-5">
 					<button class="std-btn" type="submit">
 						"Login"
 					</button>
