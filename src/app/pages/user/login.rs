@@ -54,33 +54,6 @@ fn Log() -> impl IntoView
 	let mut show_password = false;
 	let (read_ptype, write_ptype) = create_signal("password");
 
-	// Creates a reactive value to update the button
-	// let (show, set_show) = create_signal(0);
-	// let on_click = move |_| {
-	// 	set_show.update(|show| {
-	// 		        if *show == 0
-	// 		        {
-	// 			        *show += 1;
-	// 		        }
-	// 		        else
-	// 		        {
-	// 			        *show -= 1;
-	// 		        }
-	// 	        });
-	// };
-
-	// // assign the value of the password field type
-	// let show_password = Signal::derive(move || {
-	// 	if show.get() == 0
-	// 	{
-	// 		"password"
-	// 	}
-	// 	else
-	// 	{
-	// 		"text"
-	// 	}
-	// });
-
 	view! {
 		<Show when=move || err.get().contains("Success")>
 			<div class="txt-success text-center font-bold mt-10">{err}</div>

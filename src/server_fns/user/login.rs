@@ -35,20 +35,6 @@ pub async fn login(identity: String, password: String) -> Result<(), ServerFnErr
 		response.insert_header(header::SET_COOKIE, cookie);
 	}
 
-	// let token_context = use_context::<AccessToken>();
-	// if token_context.is_none()
-	// {
-	// 	println!("Token context in login is none, providing new context");
-	// 	let access_token = access_token_provider();
-	// 	provide_context(access_token);
-	// }
-	// else
-	// {
-	// 	println!("Token context in login is some");
-	// 	let token_set = token_context.unwrap().set_access_token;
-	// 	token_set(Some(cookie.to_string()));
-	// }
-
 	leptos_actix::redirect("/dashboard");
 
 	println!("Login successful, redirecting to dashboard");

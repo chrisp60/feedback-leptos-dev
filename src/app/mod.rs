@@ -16,7 +16,7 @@ pub fn App() -> impl IntoView
 	                         test::TestPage,
 	                         user::{login::LoginPage, register::RegisterPage},
 	                         NotFound},
-	            server_fns::user::get_current_user};
+	            server_fns::user::current::get_current_user};
 
 	// Provides context that manages stylesheets, titles, meta tags, etc.
 	provide_meta_context();
