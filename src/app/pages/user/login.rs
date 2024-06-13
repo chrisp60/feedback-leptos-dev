@@ -7,6 +7,34 @@ use crate::server_fns::user::login::UserLogin;
 #[component]
 pub fn LoginPage() -> impl IntoView
 {
+	view! {
+		<div class="bg-primary-900 text-white">
+			<div class="">
+				<a href="/" class="font-bold text-xl text-left ml-10 ">
+					"LeptosDev"
+				</a>
+			</div>
+		</div>
+
+		<Title text="Login"/>
+
+		<p class="h0 m-t-10 text-center">"Login"</p>
+		// <Log/>
+
+		// <Show when=move || err.get().contains("Success")>
+		// <div class="txt-success text-center font-bold mt-10">{err}</div>
+		// </Show>
+		// <Show when=move || err.get().contains("Error")>
+		// <div class="txt-error text-center font-bold mt-10">{err}</div>
+		// </Show>
+
+		<Counters/>
+	}.into_view()
+}
+
+#[island]
+fn Counters() -> impl IntoView
+{
 	let user_login_action = create_server_action::<UserLogin>();
 
 	let err = Signal::derive(move || {
@@ -33,60 +61,35 @@ pub fn LoginPage() -> impl IntoView
 			                             }
 		                             })
 	});
+	// Creates a reactive value to update the button
+	let (count, set_count) = create_signal(0);
+	let on_click = move |_| {
+		set_count.update(|count| {
+			         if *count == 0
+			         {
+				         *count += 1;
+			         }
+			         else
+			         {
+				         *count -= 1;
+			         }
+		         });
+	};
 
-	// user_w_signal.update(|user_r_signal| *user_r_signal = true);
-
-	let mut show_password = false;
-	let (read_ptype, write_ptype) = create_signal("password");
-
-	let mut toggle_show = move |_| {
-		show_password = !show_password;
-		if show_password
+	let show_password = Signal::derive(move || {
+		if count.get() == 0
 		{
-			write_ptype.set("text")
+			"password"
 		}
 		else
 		{
-			write_ptype.set("password")
+			"text"
 		}
-	};
-
-	// let mut change_password_visibility = move |_| {
-	// 	show_password = !show_password;
-	// 	if show_password
-	// 	{
-	// 		write_ptype.set("text")
-	// 	}
-	// 	else
-	// 	{
-	// 		write_ptype.set("password")
-	// 	}
-	// };
+	});
 
 	view! {
-		<div class="bg-primary-900 text-white">
-			<div class="">
-				<a href="/" class="font-bold text-xl text-left ml-10 ">
-					"LeptosDev"
-				</a>
-			</div>
-		</div>
-
-		<Title text="Login"/>
-
-		<p class="h0 m-t-10 text-center">"Login"</p>
-		// <Log/>
-
-		<Show when=move || err.get().contains("Success")>
-			<div class="txt-success text-center font-bold mt-10">{err}</div>
-		</Show>
-		<Show when=move || err.get().contains("Error")>
-			<div class="txt-error text-center font-bold mt-10">{err}</div>
-		</Show>
-
 		<div class="container mx-auto columns-1 text-center mt-10">
 			<ActionForm action=user_login_action>
-
 				<div>
 					<label class="input-label" for="identity">
 						"Username or Email"
@@ -103,17 +106,16 @@ pub fn LoginPage() -> impl IntoView
 					/>
 				</div>
 
-				<br/>
-
 				<div>
 					<label class="input-label" for="password">
 						"Password"
 					</label>
 				</div>
+
 				<div>
 					<input
 						class="input-fields"
-						type=read_ptype
+						type=show_password
 						class="ml-10"
 						name="password"
 						id="password"
@@ -121,7 +123,9 @@ pub fn LoginPage() -> impl IntoView
 					/>
 				</div>
 
-				<br/>
+				<button class="std-btn" type="button" on:click=on_click>
+					"Click Me: "
+				</button>
 
 				<div>
 					<button class="std-btn" type="submit">
@@ -129,27 +133,62 @@ pub fn LoginPage() -> impl IntoView
 					</button>
 				</div>
 			</ActionForm>
-			<br/>
-			<button
-				id="show_password"
-				on:click=move |ev| {
-					if event_target::<web_sys::HtmlButtonElement>(&ev).id() == "show_password" {
-						info!("Button clicked");
-					} else {
-						info!("Button not clicked");
-					}
-					toggle_show(ev);
-				}
-			>
-
-				"Show Password"
-			</button>
-			<br/>
-			{show_password}
-
 		</div>
-	}.into_view()
+	}
 }
+
+// <div class="container mx-auto columns-1 text-center mt-10">
+// 	<ActionForm action=user_login_action>
+
+// 		<div>
+// 			<label class="input-label" for="identity">
+// 				"Username or Email"
+// 			</label>
+// 		</div>
+// 		<div>
+// 			<input
+// 				class="input-fields"
+// 				type="text"
+// 				class="ml-9"
+// 				name="identity"
+// 				id="identity"
+// 				required
+// 			/>
+// 		</div>
+
+// 		<br/>
+
+// 		<div>
+// 			<label class="input-label" for="password">
+// 				"Password"
+// 			</label>
+// 		</div>
+// 		<div>
+// 			<input
+// 				class="input-fields"
+// 				type="text"
+// 				class="ml-10"
+// 				name="password"
+// 				id="password"
+// 				required
+// 			/>
+// 		</div>
+
+// 		<button type="button" class="std-btn" on:click=on_click>
+// 			"Click Me: "
+// 		</button>
+// 		{move || { show_password.get() }}
+// 		<br/>
+
+// 		<div>
+// 			<button class="std-btn" type="submit">
+// 				"Login"
+// 			</button>
+// 		</div>
+// 	</ActionForm>
+// 	<br/>
+
+// </div>
 
 // #[island]
 // fn Log() -> impl IntoView
