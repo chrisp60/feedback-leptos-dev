@@ -18,7 +18,7 @@ pub fn LoginPage() -> impl IntoView
 		<p class="h0 m-t-10 text-center">"Login"</p>
 
 		<Log/>
-	}.into_view()
+	}
 }
 
 #[island]
@@ -51,32 +51,35 @@ fn Log() -> impl IntoView
 		                             })
 	});
 
-	// Creates a reactive value to update the button
-	let (show, set_show) = create_signal(0);
-	let on_click = move |_| {
-		set_show.update(|show| {
-			        if *show == 0
-			        {
-				        *show += 1;
-			        }
-			        else
-			        {
-				        *show -= 1;
-			        }
-		        });
-	};
+	let mut show_password = false;
+	let (read_ptype, write_ptype) = create_signal("password");
 
-	// assign the value of the password field type
-	let show_password = Signal::derive(move || {
-		if show.get() == 0
-		{
-			"password"
-		}
-		else
-		{
-			"text"
-		}
-	});
+	// Creates a reactive value to update the button
+	// let (show, set_show) = create_signal(0);
+	// let on_click = move |_| {
+	// 	set_show.update(|show| {
+	// 		        if *show == 0
+	// 		        {
+	// 			        *show += 1;
+	// 		        }
+	// 		        else
+	// 		        {
+	// 			        *show -= 1;
+	// 		        }
+	// 	        });
+	// };
+
+	// // assign the value of the password field type
+	// let show_password = Signal::derive(move || {
+	// 	if show.get() == 0
+	// 	{
+	// 		"password"
+	// 	}
+	// 	else
+	// 	{
+	// 		"text"
+	// 	}
+	// });
 
 	view! {
 		<Show when=move || err.get().contains("Success")>
@@ -109,11 +112,10 @@ fn Log() -> impl IntoView
 						"Password"
 					</label>
 				</div>
-
 				<div>
 					<input
 						class="input-fields"
-						type=show_password
+						type=read_ptype
 						class="ml-10"
 						name="password"
 						id="password"
@@ -122,7 +124,19 @@ fn Log() -> impl IntoView
 				</div>
 
 				<div>
-					<button class="sm-btn" type="button" on:click=on_click>
+					<button
+						class="text-xs sm-btn"
+						type="button"
+						on:click=move |_| {
+							show_password = !show_password;
+							if show_password {
+								write_ptype.set("text")
+							} else {
+								write_ptype.set("password")
+							}
+						}
+					>
+
 						"Show Password"
 					</button>
 				</div>

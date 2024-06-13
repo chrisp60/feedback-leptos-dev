@@ -119,9 +119,7 @@ fn Reg() -> impl IntoView
 					<input class="input-fields" type="text" name="username" id="username" required/>
 				</div>
 
-				<br/>
-
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="first_name">
 						"First Name"
 					</label>
@@ -136,9 +134,7 @@ fn Reg() -> impl IntoView
 					/>
 				</div>
 
-				<br/>
-
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="last_name">
 						"Last Name"
 					</label>
@@ -153,9 +149,7 @@ fn Reg() -> impl IntoView
 					/>
 				</div>
 
-				<br/>
-
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="date_of_birth">
 						"Date of Birth"
 					</label>
@@ -170,9 +164,7 @@ fn Reg() -> impl IntoView
 					/>
 				</div>
 
-				<br/>
-
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="email">
 						"Email"
 					</label>
@@ -181,9 +173,7 @@ fn Reg() -> impl IntoView
 					<input class="input-fields" type="email" name="email" id="email" required/>
 				</div>
 
-				<br/>
-
-				<div>
+				<div class="mt-3">
 					<label class="input-label" for="password">
 						"Password"
 					</label>
@@ -198,26 +188,26 @@ fn Reg() -> impl IntoView
 					/>
 
 				</div>
-				<button
-					class="text-xs sm-btn"
-					type="button"
-					on:click=move |_| {
-						show_password = !show_password;
-						if show_password {
-							write_ptype.set("text")
-						} else {
-							write_ptype.set("password")
-						}
-					}
-				>
-
-					"Show Password"
-				</button>
-
-				<br/>
-				<br/>
 
 				<div>
+					<button
+						class="text-xs sm-btn"
+						type="button"
+						on:click=move |_| {
+							show_password = !show_password;
+							if show_password {
+								write_ptype.set("text")
+							} else {
+								write_ptype.set("password")
+							}
+						}
+					>
+
+						"Show Password"
+					</button>
+				</div>
+
+				<div class="mt-5">
 					<button class="std-btn" type="submit">
 						"Register"
 					</button>

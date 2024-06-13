@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-
 use super::*;
 
 #[server(UserLogout, "/logout")]
@@ -13,8 +11,7 @@ pub async fn logout_user() -> Result<(), ServerFnError<LogOutError>>
 	println!("Logging Out");
 
 	let response = expect_context::<ResponseOptions>();
-	let cookie =
-		Cookie::build("leptos_access_token", "".to_string()).path("/").http_only(true).expires(OffsetDateTime::now_utc() - Duration::days(1)).finish();
+	let cookie = Cookie::build("leptos_access_token", "".to_string()).path("/").http_only(true).expires(OffsetDateTime::now_utc() - Duration::days(1)).finish();
 
 	if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
 	{
