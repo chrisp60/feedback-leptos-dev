@@ -14,7 +14,7 @@ pub struct Claims
 pub fn encode_jwt(email: String, id: i32) -> Result<String, jsonwebtoken::errors::Error>
 {
 	let now = Utc::now();
-	let expiry = Duration::minutes(10);
+	let expiry = Duration::minutes(60);
 
 	let claims = Claims { exp: (now + expiry).timestamp() as usize,
 	                      iat: now.timestamp() as usize,

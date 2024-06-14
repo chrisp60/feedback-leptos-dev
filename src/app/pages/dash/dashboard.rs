@@ -1,22 +1,12 @@
-use leptos::*;
+use leptos::{html::Div, *};
 use leptos_meta::Title;
-use leptos_use::{use_cookie, utils::FromToStringCodec};
+use leptos_use::{on_click_outside, use_cookie, utils::FromToStringCodec};
 
 #[component]
 pub fn DashboardPage() -> impl IntoView
 {
 	view! {
-		<div class="bg-primary-900 text-white">
-			<div class="">
-				<a href="/" class="font-bold text-xl text-left ml-10 ">
-					"LeptosDev"
-				</a>
-			</div>
-		</div>
-
-		<Title text="Dashboard"/>
-
-		<h1>"Dashboard"</h1>
+		<p class="h0 m-t-10 text-center">"Dashboard"</p>
 
 		<DashOptions/>
 	}
@@ -39,8 +29,40 @@ pub fn DashOptions() -> impl IntoView
 	};
 
 	view! {
-		<p>Counter: {move || counter.get().map(|c| c.to_string()).unwrap_or("—".to_string())}</p>
-		<button on:click=move |_| reset()>Reset</button>
-		<button on:click=move |_| increase()>+</button>
+		<div class="container mx-auto columns-1 text-center mt-10">
+
+			<div>
+				<button class="std-btn mt-3" on:click=move |_| reset()>
+					Employees
+				</button>
+			</div>
+			<div>
+				<button class="std-btn mt-3" on:click=move |_| increase()>
+					Duties
+				</button>
+			</div>
+			<div>
+				<button class="std-btn mt-3" on:click=move |_| increase()>
+					Profile
+				</button>
+			</div>
+			<div>
+				<button class="std-btn mt-3" on:click=move |_| increase()>
+					Settings
+				</button>
+			</div>
+		</div>
+
+		<div class="mt-10">
+			<p>
+				Counter: {move || counter.get().map(|c| c.to_string()).unwrap_or("—".to_string())}
+			</p>
+			<button class="mt-3" on:click=move |_| reset()>
+				Reset
+			</button>
+			<button class="mt-3" on:click=move |_| increase()>
+				+
+			</button>
+		</div>
 	}
 }

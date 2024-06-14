@@ -273,6 +273,11 @@ body
 		@apply std-bg txt-std-clr sm-txt-sz std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 px-1 !important;
 	}
 
+	.burger-btn
+	{
+		@apply std-bg std-hvr std-bdr-2 dark:aria-checked:bg-surface-800 aria-checked:bg-surface-400/60 rounded-xl ring-0 px-2 py-1 !important;
+	}
+
 	/* Lightswitch */
 	.lightswitch-track
 	{

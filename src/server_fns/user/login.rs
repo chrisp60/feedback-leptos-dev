@@ -28,7 +28,7 @@ pub async fn login(identity: String, password: String) -> Result<(), ServerFnErr
 	// println!("Login Response: {:?}", reply.clone());
 	let response = expect_context::<ResponseOptions>();
 
-	let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(10)).finish();
+	let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(60)).finish();
 
 	if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
 	{

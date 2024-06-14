@@ -7,29 +7,40 @@ pub(crate) fn TestPage() -> impl IntoView
 	view! {
 		<h1 class="text-center">"Welcome to Leptos!"</h1>
 
-		<Counter/>
+		<ShowModal/>
 		<br/>
 	}
 }
 
 #[island]
-fn Counter() -> impl IntoView
+fn ShowModal() -> impl IntoView
 {
-	// Creates a reactive value to update the button
-	let (count, set_count) = create_signal(0);
-	let on_click = move |_| set_count.update(|count| *count += 1);
-
+	let (show_modal, set_show_modal) = create_signal(false);
 	view! {
-		<div class="text-center">
-			<h2>"Counter"</h2>
+		<button on:click=move |_| set_show_modal.update(|value| *value = true)>"Click me"</button>
 
-			<button class="std-btn" on:click=on_click>
-				"Click Me: "
-				{count}
-			</button>
-		</div>
+		<div>{move || show_modal()}</div>
 	}
 }
+
+// #[island]
+// fn Counter() -> impl IntoView
+// {
+// 	// Creates a reactive value to update the button
+// 	let (count, set_count) = create_signal(0);
+// 	let on_click = move |_| set_count.update(|count| *count += 1);
+
+// 	view! {
+// 		<div class="text-center">
+// 			<h2>"Counter"</h2>
+
+// 			<button class="std-btn" on:click=on_click>
+// 				"Click Me: "
+// 				{count}
+// 			</button>
+// 		</div>
+// 	}
+// }
 
 // #[island]
 // fn Counters() -> impl IntoView

@@ -5,15 +5,6 @@ use leptos_meta::Title;
 pub(crate) fn HomePage() -> impl IntoView
 {
 	view! {
-		<div class="bg-primary-900 text-white">
-			<div class="">
-				<a href="/" class="font-bold text-xl text-left ml-10 ">
-					"LeptosDev"
-				</a>
-
-			</div>
-		</div>
-
 		<Title text="LeptosDev"/>
 
 		<div class="text-center">
