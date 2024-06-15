@@ -179,40 +179,7 @@ fn NavBar() -> impl IntoView
 		<Suspense fallback=move || {
 			view! {
 				<div class="bg-primary-900 text-white">
-					<div>
-						<span>
-							<button class="ml-3 w-20">
-
-								<span>
-									<svg
-										viewBox="0 0 100 60"
-										class="dark:fill-gray-400 fill-gray-900 w-5 h-5"
-									>
-										<rect
-											class="fill-secondary-400"
-											width="100"
-											height="20"
-										></rect>
-										<rect
-											class="fill-secondary-300"
-											y="30"
-											width="100"
-											height="20"
-										></rect>
-										<rect
-											class="fill-secondary-400"
-											y="60"
-											width="100"
-											height="20"
-										></rect>
-									</svg>
-								</span>
-							</button>
-							<a href="/" class="font-bold text-xl text-left ml-3 ">
-								"AppName"
-							</a>
-						</span>
-					</div>
+					<BurgerPlaceholder/>
 				</div>
 			}
 		}>
@@ -226,42 +193,7 @@ fn NavBar() -> impl IntoView
 									<Show
 										when=move || rr.is_some()
 										fallback=move || {
-											view! {
-												<div>
-													<span>
-														<button class="ml-3 w-20">
-
-															<span>
-																<svg
-																	viewBox="0 0 100 60"
-																	class="dark:fill-gray-400 fill-gray-900 w-5 h-5"
-																>
-																	<rect
-																		class="fill-secondary-400"
-																		width="100"
-																		height="20"
-																	></rect>
-																	<rect
-																		class="fill-secondary-300"
-																		y="30"
-																		width="100"
-																		height="20"
-																	></rect>
-																	<rect
-																		class="fill-secondary-400"
-																		y="60"
-																		width="100"
-																		height="20"
-																	></rect>
-																</svg>
-															</span>
-														</button>
-														<a href="/" class="font-bold text-xl text-left ml-3 ">
-															"AppName"
-														</a>
-													</span>
-												</div>
-											}
+											view! { <BurgerPlaceholder/> }
 										}
 									>
 
@@ -345,4 +277,28 @@ fn LoggedInNavBar() -> impl IntoView
 
 		</Suspense>
 	}
+}
+
+#[component]
+fn BurgerPlaceholder() -> impl IntoView
+{
+	view! {
+		<div>
+			<span>
+				<button class="ml-3 w-20">
+
+					<span>
+						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+							<rect class="fill-secondary-400" width="100" height="20"></rect>
+							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+						</svg>
+					</span>
+				</button>
+				<a href="/" class="font-bold text-xl text-left ml-3 ">
+					"AppName"
+				</a>
+			</span>
+		</div>
+	}.into_view()
 }
