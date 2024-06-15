@@ -10,7 +10,7 @@ pub fn App() -> impl IntoView
 	use leptos::provide_context;
 	use leptos_meta::*;
 	use leptos_router::*;
-	use leptos_use::{use_cookie, utils::FromToStringCodec};
+	use leptos_use::{storage::use_local_storage, use_cookie, utils::FromToStringCodec};
 
 	use crate::{app::pages::{dash::dashboard::{DashOptions, DashboardPage},
 	                         home::HomePage,
@@ -24,9 +24,14 @@ pub fn App() -> impl IntoView
 
 	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
-	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
+	let usr = create_resource(move || access_token.get(), get_current_user);
 
-	let username = Signal::derive(move || usr.get().map(|data| data.unwrap().map_or("".to_string(), |usr| usr.username.clone())));
+	create_effect(move |_| {
+		let (user, set_user, _) = use_local_storage::<Usr, FromToStringCodec>("leptos_user");
+		request_animation_frame(move || set_user.set(usr().unwrap().unwrap().unwrap()));
+
+		provide_context::<Usr>(user());
+	});
 
 	view! {
 		<Stylesheet id="leptos" href="/pkg/leptos-dev.css"/>
@@ -35,6 +40,7 @@ pub fn App() -> impl IntoView
 		<Title text="Welcome to Leptos"/>
 
 		<NavBar/>
+
 		// content for this welcome page
 		<Router>
 			<main>
@@ -131,47 +137,118 @@ pub fn App() -> impl IntoView
 		</Router>
 	}
 }
+// let username = Signal::derive(move || usr.get().map(|data| data.unwrap().map_or("".to_string(), |usr| usr.username.clone())));
+// async fn use_auth_user() -> Signal<Option<AuthenticatedUser>>
+// {
+// 	use leptos_use::{storage::use_local_storage, use_cookie, utils::FromToStringCodec};
 
-use leptos_use::on_click_outside;
+// 	use crate::server_fns::user::current::get_current_user;
+
+// 	(move || {
+// 		if get_current_user(access_token()).unwrap().is_some()
+// 		{
+// 			Some(AuthenticatedUser::from_whatever(user()))
+// 		}
+// 		else
+// 		{
+// 			None
+// 		}
+// 	}).into_signal()
+// }
+use crate::server_fns::user::current::Usr;
+#[derive(Debug, Clone)]
+pub struct AuthenticatedUser
+{
+	pub user: Usr
+}
+
+impl AuthenticatedUser
+{
+	pub fn from_whatever(user: Usr) -> Self
+	{
+		Self { user }
+	}
+}
 
 #[island]
 fn NavBar() -> impl IntoView
 {
-	let (show_modal, set_show_modal) = create_signal(false);
-	// let m_ref = create_node_ref::<Div>();
+	use leptos_use::{use_cookie, utils::FromToStringCodec};
 
-	// let modal_ref: NodeRef<Div> = m_ref;
+	use crate::server_fns::user::current::get_current_user;
 
-	// let _ = on_click_outside(modal_ref, move |_| set_show_modal.set(false));
+	// let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
+
+	// let usr = create_resource(move || access_token.get(), get_current_user);
+
+	let current_user: Option<Usr> = None;
+	println!("before - current_user is {:?}", current_user);
+
+	create_effect(move |_| {
+		let user: Option<Usr> = use_context();
+		request_animation_frame(move || current_user = user);
+	});
+
+	println!("after - current_user is {:?}", current_user);
 
 	view! {
-		<div class="bg-primary-900 text-white">
-			<div class="">
-				<button
-					class="ml-3"
-					on:click=move |_| {
-						logging::log!("show_modal is {}", show_modal());
-						if show_modal() == true {
-							set_show_modal.set(false)
-						} else {
-							set_show_modal.set(true)
-						}
-					}
-				>
+		<Suspense fallback=move || { "Loading...." }>
+			<div class="bg-primary-900 text-white justify-between">
+				<div>
+					{move || {
+						usr.get()
+							.map(|data| {
+								let rr = data.unwrap();
+								view! {
+									<Show
+										when=move || rr.is_some()
+										fallback=move || {
+											view! { "Loading...." }
+										}
+									>
 
-					<span>
-						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
-							<rect class="fill-secondary-400" width="100" height="20"></rect>
-							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
-							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
-						</svg>
-					</span>
-				</button>
-				<a href="/" class="font-bold text-xl text-left ml-5 ">
-					"LeptosDev"
-				</a>
+										<MenuModal/>
+									</Show>
+								}
+							})
+					}}
+
+				</div>
+
 			</div>
-		</div>
+		</Suspense>
+	}
+}
+
+#[component]
+fn MenuModal() -> impl IntoView
+{
+	let (show_modal, set_show_modal) = create_signal(false);
+
+	view! {
+		<span class="">
+			<button
+				class="ml-3 w-20"
+				on:click=move |_| {
+					logging::log!("show_modal is {}", show_modal());
+					if show_modal() == true {
+						set_show_modal.set(false)
+					} else {
+						set_show_modal.set(true)
+					}
+				}
+			>
+
+				<span>
+					<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+						<rect class="fill-secondary-400" width="100" height="20"></rect>
+						<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+						<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+					</svg>
+				</span>
+			</button>
+
+		</span>
 
 		<Suspense fallback=move || {
 			"Loading...."

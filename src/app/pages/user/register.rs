@@ -5,14 +5,6 @@ use crate::server_fns::user::register::RegisterUser;
 pub fn RegisterPage() -> impl IntoView
 {
 	view! {
-		<div class="bg-primary-900 text-white">
-			<div class="">
-				<a href="/" class="font-bold text-xl text-left ml-10 ">
-					"LeptosDev"
-				</a>
-			</div>
-		</div>
-
 		<Title text="Register"/>
 
 		<p class="h0 m-t-10 text-center">"Register New User"</p>
