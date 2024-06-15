@@ -22,5 +22,5 @@
       "editor.formatOnSaveMode": "file"
     },
     "rust-analyzer.rustfmt.overrideCommand": ["leptosfmt", "--stdin", "--rustfmt"],
-    "rust-analyzer.cargo.features": "ssr"
+    "rust-analyzer.cargo.features": ["ssr", "csr", "hydrate"],
 }

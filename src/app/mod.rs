@@ -22,22 +22,17 @@ pub fn App() -> impl IntoView
 	// Provides context that manages stylesheets, titles, meta tags, etc.
 	provide_meta_context();
 
+	// Determine if there is a logged in user cookie
 	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
-	let usr = create_resource(move || access_token.get(), get_current_user);
-
-	create_effect(move |_| {
-		let (user, set_user, _) = use_local_storage::<Usr, FromToStringCodec>("leptos_user");
-		request_animation_frame(move || set_user.set(usr().unwrap().unwrap().unwrap()));
-
-		provide_context::<Usr>(user());
-	});
+	// Needs to be a blocking resource because we need to wait for the cookie result before use in view
+	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
 
 	view! {
 		<Stylesheet id="leptos" href="/pkg/leptos-dev.css"/>
 
 		// sets the document title
-		<Title text="Welcome to Leptos"/>
+		<Title text="Welcome to AppName"/>
 
 		<NavBar/>
 
@@ -45,9 +40,35 @@ pub fn App() -> impl IntoView
 		<Router>
 			<main>
 				<Routes>
-					<Route path="" view=HomePage/>
 					<Route
-						path="register"
+						path="/"
+						view=move || {
+							view! {
+								<Suspense fallback=move || {
+									"Loading...."
+								}>
+									{move || {
+										usr.get()
+											.map(|data| {
+												let rr = data.unwrap();
+												view! {
+													<Show
+														when=move || rr.is_none()
+														fallback=move || view! { <Redirect path="/dashboard"/> }
+													>
+														<HomePage/>
+													</Show>
+												}
+											})
+									}}
+
+								</Suspense>
+							}
+						}
+					/>
+
+					<Route
+						path="/register"
 						view=move || {
 							view! {
 								<Suspense fallback=move || {
@@ -116,6 +137,7 @@ pub fn App() -> impl IntoView
 														when=move || rr.is_some()
 														fallback=move || view! { <Redirect path="/login"/> }
 													>
+
 														<DashboardPage/>
 
 													</Show>
@@ -137,38 +159,8 @@ pub fn App() -> impl IntoView
 		</Router>
 	}
 }
+
 // let username = Signal::derive(move || usr.get().map(|data| data.unwrap().map_or("".to_string(), |usr| usr.username.clone())));
-// async fn use_auth_user() -> Signal<Option<AuthenticatedUser>>
-// {
-// 	use leptos_use::{storage::use_local_storage, use_cookie, utils::FromToStringCodec};
-
-// 	use crate::server_fns::user::current::get_current_user;
-
-// 	(move || {
-// 		if get_current_user(access_token()).unwrap().is_some()
-// 		{
-// 			Some(AuthenticatedUser::from_whatever(user()))
-// 		}
-// 		else
-// 		{
-// 			None
-// 		}
-// 	}).into_signal()
-// }
-use crate::server_fns::user::current::Usr;
-#[derive(Debug, Clone)]
-pub struct AuthenticatedUser
-{
-	pub user: Usr
-}
-
-impl AuthenticatedUser
-{
-	pub fn from_whatever(user: Usr) -> Self
-	{
-		Self { user }
-	}
-}
 
 #[island]
 fn NavBar() -> impl IntoView
@@ -177,23 +169,54 @@ fn NavBar() -> impl IntoView
 
 	use crate::server_fns::user::current::get_current_user;
 
-	// let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
+	// Determine if there is a logged in user cookie
+	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
-	// let usr = create_resource(move || access_token.get(), get_current_user);
-
-	let current_user: Option<Usr> = None;
-	println!("before - current_user is {:?}", current_user);
-
-	create_effect(move |_| {
-		let user: Option<Usr> = use_context();
-		request_animation_frame(move || current_user = user);
-	});
-
-	println!("after - current_user is {:?}", current_user);
+	// Needs to be a local resource so that it only gets created once
+	let usr = create_local_resource(move || access_token.get(), get_current_user);
 
 	view! {
-		<Suspense fallback=move || { "Loading...." }>
-			<div class="bg-primary-900 text-white justify-between">
+		<Suspense fallback=move || {
+			view! {
+				<div class="bg-primary-900 text-white">
+					<div>
+						<span>
+							<button class="ml-3 w-20">
+
+								<span>
+									<svg
+										viewBox="0 0 100 60"
+										class="dark:fill-gray-400 fill-gray-900 w-5 h-5"
+									>
+										<rect
+											class="fill-secondary-400"
+											width="100"
+											height="20"
+										></rect>
+										<rect
+											class="fill-secondary-300"
+											y="30"
+											width="100"
+											height="20"
+										></rect>
+										<rect
+											class="fill-secondary-400"
+											y="60"
+											width="100"
+											height="20"
+										></rect>
+									</svg>
+								</span>
+							</button>
+							<a href="/" class="font-bold text-xl text-left ml-3 ">
+								"AppName"
+							</a>
+						</span>
+					</div>
+				</div>
+			}
+		}>
+			<div class="bg-primary-900 text-white">
 				<div>
 					{move || {
 						usr.get()
@@ -203,11 +226,48 @@ fn NavBar() -> impl IntoView
 									<Show
 										when=move || rr.is_some()
 										fallback=move || {
-											view! { "Loading...." }
+											view! {
+												<div>
+													<span>
+														<button class="ml-3 w-20">
+
+															<span>
+																<svg
+																	viewBox="0 0 100 60"
+																	class="dark:fill-gray-400 fill-gray-900 w-5 h-5"
+																>
+																	<rect
+																		class="fill-secondary-400"
+																		width="100"
+																		height="20"
+																	></rect>
+																	<rect
+																		class="fill-secondary-300"
+																		y="30"
+																		width="100"
+																		height="20"
+																	></rect>
+																	<rect
+																		class="fill-secondary-400"
+																		y="60"
+																		width="100"
+																		height="20"
+																	></rect>
+																</svg>
+															</span>
+														</button>
+														<a href="/" class="font-bold text-xl text-left ml-3 ">
+															"AppName"
+														</a>
+													</span>
+												</div>
+											}
 										}
 									>
 
-										<MenuModal/>
+										<div>
+											<LoggedInNavBar/>
+										</div>
 									</Show>
 								}
 							})
@@ -220,35 +280,42 @@ fn NavBar() -> impl IntoView
 	}
 }
 
-#[component]
-fn MenuModal() -> impl IntoView
+#[island]
+fn LoggedInNavBar() -> impl IntoView
 {
 	let (show_modal, set_show_modal) = create_signal(false);
 
 	view! {
-		<span class="">
-			<button
-				class="ml-3 w-20"
-				on:click=move |_| {
-					logging::log!("show_modal is {}", show_modal());
-					if show_modal() == true {
-						set_show_modal.set(false)
-					} else {
-						set_show_modal.set(true)
+		<div>
+			<span>
+				<button
+					class="ml-3 w-20"
+					on:click=move |_| {
+						logging::log!("show_modal is {}", show_modal());
+						if show_modal() {
+							set_show_modal.set(false)
+						} else {
+							set_show_modal.set(true)
+						}
 					}
-				}
-			>
+				>
 
-				<span>
-					<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
-						<rect class="fill-secondary-400" width="100" height="20"></rect>
-						<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
-						<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
-					</svg>
-				</span>
-			</button>
+					<span>
+						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+							<rect class="fill-secondary-400" width="100" height="20"></rect>
+							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+						</svg>
+					</span>
+				</button>
+				// button back to home
+				<a href="/" class="font-bold text-xl text-left ml-3 ">
+					"AppName"
+				</a>
+			// tabs for the dashboard (Employees, Departments, etc.)
 
-		</span>
+			</span>
+		</div>
 
 		<Suspense fallback=move || {
 			"Loading...."

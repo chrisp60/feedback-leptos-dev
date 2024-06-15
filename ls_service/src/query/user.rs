@@ -35,12 +35,12 @@ impl UserQuery
 	/// Find a user by username or email and verifies password match returning an encoded JWT token.
 	pub async fn authenticate_user(db: &DbConn, identity: &str, password: &str) -> Result<String, DbErr>
 	{
-		println!("Authenticating user");
-		println!("Identity: {}", identity);
-		println!("Password: {}", password);
+		// println!("Authenticating user");
+		// println!("Identity: {}", identity);
+		// println!("Password: {}", password);
 
 		let password_hash = digest(password);
-		println!("Password hash: {}", password_hash);
+		// println!("Password hash: {}", password_hash);
 
 		let user = User::find().filter(Condition::all().add(user::Column::PasswordHash.eq(password_hash))
 		                                               .add(Condition::any().add(user::Column::Username.eq(identity)).add(user::Column::Email.eq(identity))))
@@ -55,7 +55,7 @@ impl UserQuery
 		else
 		{
 			let token = encode_jwt(user.as_ref().unwrap().email.clone(), user.as_ref().unwrap().id).expect("Could not encode JWT");
-			println!("Token: {}", token);
+			// println!("Token: {}", token);
 			Ok(token)
 		}
 	}
