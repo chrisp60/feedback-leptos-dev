@@ -6,19 +6,25 @@ pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, Serv
 	use leptos_use::{storage::use_local_storage, utils::FromToStringCodec};
 	use ls_service::{utils::jwt::decode_jwt, UserQuery};
 
-	use crate::app::state::AppState;
+	use crate::{app::state::AppState, server_fns::user::logout::logout_user};
 
 	// println!("get_current_user called with token: {:?}", token);
 	if token.is_none()
 	{
-		return Ok(None);
+		Ok(None)
 	}
 	else
 	{
 		let token = token.unwrap();
 
 		// decode token and get user id and email from it
-		let data = decode_jwt(token).expect("Could not decode JWT");
+		let data = decode_jwt(token); // .expect("Could not decode JWT");
+		if data.is_err()
+		{
+			let _ = logout_user().await;
+			return Ok(None);
+		}
+		let data = data.unwrap();
 
 		let state = leptos_actix::extract().await;
 
