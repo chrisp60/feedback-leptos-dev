@@ -71,12 +71,9 @@ pub async fn register_user(first_name: String,
 			_ => return Err(ServerFnError::WrappedServerError(UserRegistrationError::DatabaseError))
 		}
 	}
-	else
+	else if let migration::sea_orm::ActiveValue::Set(value) = create_reply.unwrap().id
 	{
-		if let migration::sea_orm::ActiveValue::Set(value) = create_reply.unwrap().id
-		{
-			id = value;
-		}
+		id = value;
 	}
 
 	let reply = UserQuery::authenticate_user(&conn, &username, &password).await;
@@ -227,23 +224,21 @@ async fn check_inputs(first_name: String,
 
 	let age = current_year - year;
 
-	if age < 18
+	match age.cmp(&18)
 	{
-		return Err(ServerFnError::WrappedServerError(UserRegistrationError::InvalidDateOfBirth));
-	}
-	else if age == 18
-	{
-		if month > current_month
+		std::cmp::Ordering::Less =>
 		{
 			return Err(ServerFnError::WrappedServerError(UserRegistrationError::InvalidDateOfBirth));
 		}
-		else if month == current_month
+		std::cmp::Ordering::Equal =>
 		{
-			if day > current_day
+			if month > current_month || (month == current_month && day > current_day)
 			{
 				return Err(ServerFnError::WrappedServerError(UserRegistrationError::InvalidDateOfBirth));
 			}
 		}
+		std::cmp::Ordering::Greater =>
+		{}
 	}
 
 	// check username is valid length

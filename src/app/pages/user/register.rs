@@ -29,7 +29,7 @@ fn Reg() -> impl IntoView
 
 				                                    if e.contains("Username") && e.contains("already in use")
 				                                    {
-					                                    return "Error:- Username is already in use".to_string();
+					                                    "Error:- Username is already in use".to_string()
 				                                    }
 				                                    else if e.contains("Email") && e.contains("already in use")
 				                                    {

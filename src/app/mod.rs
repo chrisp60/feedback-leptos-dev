@@ -2,15 +2,14 @@
 pub mod state;
 
 pub(crate) mod pages;
-use leptos::{html::Div, *};
+use leptos::*;
 
 #[component]
 pub fn App() -> impl IntoView
 {
-	use leptos::provide_context;
 	use leptos_meta::*;
 	use leptos_router::*;
-	use leptos_use::{storage::use_local_storage, use_cookie, utils::FromToStringCodec};
+	use leptos_use::{use_cookie, utils::FromToStringCodec};
 
 	use crate::{app::pages::{dash::dashboard::{DashOptions, DashboardPage},
 	                         home::HomePage,

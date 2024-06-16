@@ -15,11 +15,11 @@ pub(crate) fn TestPage() -> impl IntoView
 #[island]
 fn ShowModal() -> impl IntoView
 {
-	let (show_modal, set_show_modal) = create_signal(false);
+	let (_show_modal, set_show_modal) = create_signal(false);
 	view! {
 		<button on:click=move |_| set_show_modal.update(|value| *value = true)>"Click me"</button>
 
-		<div>{move || show_modal()}</div>
+		<div>_show_modal()</div>
 	}
 }
 

@@ -3,7 +3,6 @@ use super::*;
 #[server]
 pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, ServerFnError<AuthError>>
 {
-	use leptos_use::{storage::use_local_storage, utils::FromToStringCodec};
 	use ls_service::{utils::jwt::decode_jwt, UserQuery};
 
 	use crate::{app::state::AppState, server_fns::user::logout::logout_user};

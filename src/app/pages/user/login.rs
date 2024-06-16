@@ -22,21 +22,18 @@ fn Log() -> impl IntoView
 		(user_login_action.value())().map_or("".to_owned(), |result| {
 			                             match result
 			                             {
-				                             Ok(_) =>
-			                                 {
-				                                 return "Success:- User authenticated".to_string();
-			                                 }
+				                             Ok(_) => "Success:- User authenticated".to_string(),
 			                                 Err(err) =>
 			                                 {
 				                                 let e = format!("{:?}", err);
 
 				                                 if e.contains("NoUserFound")
 				                                 {
-					                                 return "Error:- Unable to find a user with those credentials. Please check and try again!".to_string();
+					                                 "Error:- Unable to find a user with those credentials. Please check and try again!".to_string()
 				                                 }
 				                                 else
 				                                 {
-					                                 return "Error:- Unknown error occurred.".to_string();
+					                                 "Error:- Unknown error occurred.".to_string()
 				                                 }
 			                                 }
 			                             }

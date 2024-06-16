@@ -1,6 +1,5 @@
-use leptos::{html::Div, *};
-use leptos_meta::Title;
-use leptos_use::{on_click_outside, use_cookie, utils::FromToStringCodec};
+use leptos::*;
+use leptos_use::{use_cookie, utils::FromToStringCodec};
 
 #[component]
 pub fn DashboardPage() -> impl IntoView
