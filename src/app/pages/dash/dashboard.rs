@@ -1,18 +1,53 @@
-use leptos::*;
 use leptos_use::{use_cookie, utils::FromToStringCodec};
+
+use super::*;
+use crate::server_fns::user::current::Usr;
 
 #[component]
 pub fn DashboardPage() -> impl IntoView
 {
-	view! {
-		<p class="h0 m-t-10 text-center">"Dashboard"</p>
+	use crate::server_fns::user::current::get_current_user;
 
-		<DashOptions/>
+	// Determine if there is a logged in user cookie
+	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
+
+	// Needs to be a local resource so that it only gets created once
+	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
+
+	view! {
+		<Suspense fallback=move || {
+			view! { <div></div> }
+		}>
+			<div>
+				<div>
+					{move || {
+						usr.get()
+							.map(|data| {
+								let rr = data.unwrap();
+								let tt = rr.clone();
+								view! {
+									<Show
+										when=move || rr.is_some()
+										fallback=move || {
+											view! { <div></div> }
+										}
+									>
+
+										<DashOptions user=tt.clone()/>
+									</Show>
+								}
+							})
+					}}
+
+				</div>
+
+			</div>
+		</Suspense>
 	}
 }
 
 #[island]
-pub fn DashOptions() -> impl IntoView
+pub fn DashOptions(user: Option<Usr>) -> impl IntoView
 {
 	let (counter, set_counter) = use_cookie::<u32, FromToStringCodec>("counter");
 
@@ -27,8 +62,38 @@ pub fn DashOptions() -> impl IntoView
 		set_counter.set(counter.get().map(|c| c + 1));
 	};
 
+	let username = user.unwrap().username;
+	let mut no_of_calendar_events = "0";
+	if no_of_calendar_events == "0"
+	{
+		no_of_calendar_events = "no"
+	}
+	let event = if no_of_calendar_events != "1" { "events" } else { "event" };
+	let mut no_of_reports = "0";
+	if no_of_reports == "0"
+	{
+		no_of_reports = "no"
+	}
+	let report = if no_of_reports != "1" { "reports" } else { "report" };
+
 	view! {
 		<div class="container mx-auto columns-1 text-center mt-10">
+
+			<p class="h0 text-center">"Greetings " {username}</p>
+
+			<h3 class="mt-5 text-center">
+				"You have " {no_of_calendar_events} " calendar " {event} " coming up."
+			</h3>
+			<button class="sm-btn mt-3" on:click=move |_| reset()>
+				View Calendar
+			</button>
+
+			<h3 class="mt-5 text-center">
+				"You have " {no_of_reports} " " {report} "  to review."
+			</h3>
+			<button class="sm-btn mt-3" on:click=move |_| reset()>
+				View Reports
+			</button>
 
 			<div>
 				<button class="std-btn mt-3" on:click=move |_| reset()>

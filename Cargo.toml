@@ -50,6 +50,7 @@ tracing-subscriber       = { version = "0.3", features = ["env-filter"] }
 
 
 [features]
+default = ["ssr"]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
 ssr = [
