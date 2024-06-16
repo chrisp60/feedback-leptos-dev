@@ -160,7 +160,8 @@ pub fn App() -> impl IntoView
 	}
 }
 
-// let username = Signal::derive(move || usr.get().map(|data| data.unwrap().map_or("".to_string(), |usr| usr.username.clone())));
+// let username = Signal::derive(move || usr.get().map(|data| data.unwrap().map_or("".to_string(), |usr|
+// usr.username.clone())));
 
 #[island]
 fn NavBar() -> impl IntoView

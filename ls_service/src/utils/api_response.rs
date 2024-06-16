@@ -2,52 +2,57 @@ use std::fmt::{self, Display, Formatter};
 
 use actix_web::{body::BoxBody, http::StatusCode, web, HttpResponse, Responder, ResponseError};
 
-
 #[derive(Debug)]
-pub struct ApiResponse{
-    pub _status_code: u16,
-    pub body: String,
-    response_code: StatusCode
+pub struct ApiResponse
+{
+	pub _status_code: u16,
+	pub body:         String,
+	response_code:    StatusCode
 }
 
-impl ApiResponse{
-    pub fn new(_status_code: u16, body: String) -> Self {
-        ApiResponse{
-            _status_code,
-            body,
-            response_code: StatusCode::from_u16(_status_code).unwrap()
-        }
-    }
+impl ApiResponse
+{
+	pub fn new(_status_code: u16, body: String) -> Self
+	{
+		ApiResponse { _status_code,
+		              body,
+		              response_code: StatusCode::from_u16(_status_code).unwrap() }
+	}
 }
 
-impl Responder for ApiResponse{
-    type Body = BoxBody;
+impl Responder for ApiResponse
+{
+	type Body = BoxBody;
 
-    fn respond_to(self, req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
-        let body = BoxBody::new(web::BytesMut::from(self.body.as_bytes()));
-        println!("req is {}", req.path());
-        HttpResponse::new(self.response_code).set_body(body)
-    }
+	fn respond_to(self, req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body>
+	{
+		let body = BoxBody::new(web::BytesMut::from(self.body.as_bytes()));
+		println!("req is {}", req.path());
+		HttpResponse::new(self.response_code).set_body(body)
+	}
 }
 
-impl Display for ApiResponse{
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Error: {} \n Status Code: {}", self.body, self._status_code)
-    }
+impl Display for ApiResponse
+{
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result
+	{
+		write!(f, "Error: {} \n Status Code: {}", self.body, self._status_code)
+	}
 }
 
-impl ResponseError for ApiResponse{
+impl ResponseError for ApiResponse
+{
+	fn status_code(&self) -> StatusCode
+	{
+		self.response_code
+	}
 
-    fn status_code(&self) -> StatusCode {
-        self.response_code
-    }
-
-    fn error_response(&self) -> HttpResponse<BoxBody> {
-        let body = BoxBody::new(web::BytesMut::from(self.body.as_bytes()));
-        HttpResponse::new(self.status_code()).set_body(body)
-    }
+	fn error_response(&self) -> HttpResponse<BoxBody>
+	{
+		let body = BoxBody::new(web::BytesMut::from(self.body.as_bytes()));
+		HttpResponse::new(self.status_code()).set_body(body)
+	}
 }
-
 
 // // response codes
 // enum ResponseCode{
