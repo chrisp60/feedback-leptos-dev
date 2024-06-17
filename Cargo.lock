@@ -2196,6 +2196,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "leaflet"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "365807eb9e73da9377d2e313e5863af3d64e02b770ec31972d76feda3a271d17"
+dependencies = [
+ "js-sys",
+ "paste",
+ "url",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "leptos"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2230,6 +2243,7 @@ dependencies = [
  "futures-util",
  "http 1.1.0",
  "leptos",
+ "leptos-leaflet",
  "leptos-use",
  "leptos_actix",
  "leptos_meta",
@@ -2241,6 +2255,24 @@ dependencies = [
  "serde",
  "time",
  "tracing-subscriber",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "leptos-leaflet"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a3d2c0aed4a0bbdacff81de26edad901dee1e690cd78bb1da301115cda70e62"
+dependencies = [
+ "getrandom",
+ "js-sys",
+ "leaflet",
+ "leptos",
+ "leptos_meta",
+ "paste",
+ "rand",
+ "serde-wasm-bindgen",
  "wasm-bindgen",
  "web-sys",
 ]

@@ -3,6 +3,7 @@ pub mod navbar;
 pub mod state;
 
 pub(crate) mod pages;
+
 use leptos::*;
 
 #[component]
@@ -30,6 +31,8 @@ pub fn App() -> impl IntoView
 	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
 
 	view! {
+		<Stylesheet href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+		<Script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"/>
 		<Stylesheet id="leptos" href="/pkg/leptos-dev.css"/>
 
 		// sets the document title
