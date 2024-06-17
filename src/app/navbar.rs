@@ -55,11 +55,6 @@ fn LoggedInNavBar() -> impl IntoView
 {
 	let (show_modal, set_show_modal) = create_signal(false);
 
-	fn on_close()
-	{
-		logging::log!("Modal closed");
-	}
-
 	view! {
 		<div>
 			<span>
@@ -93,32 +88,6 @@ fn LoggedInNavBar() -> impl IntoView
 		</div>
 	}
 }
-
-// <Suspense fallback=move || { "Loading...." }>
-// <MiddleMan show_modal=show_modal on_close=on_close/>
-
-// </Suspense>
-
-// #[component]
-// fn MiddleMan<C>(show_modal: ReadSignal<bool>, on_close: C) -> impl IntoView
-// 	where C: Fn() + Clone + 'static
-// {
-// 	view! {
-// 		{move || {
-// 			let show = show_modal.get();
-// 			if show { view! { <div></div> }.into_view() } else { view! { <div></div> }.into_view() }
-// 		}}
-// 	}
-// }
-
-// view! {
-//     <Modal
-//         open=show_modal
-//         on_close=on_close.clone()
-//         close_link="Close".to_string()
-//         children=Box::new(move || Fragment::new(vec![]))
-//     />
-// }
 
 #[component]
 fn BurgerPlaceholder() -> impl IntoView

@@ -1,4 +1,5 @@
 #![allow(clippy::needless_borrows_for_generic_args)]
+
 pub mod app;
 pub mod server_fns;
 
