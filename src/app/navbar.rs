@@ -1,7 +1,7 @@
 use super::*;
 
 #[island]
-pub fn NavBar() -> impl IntoView
+pub fn NavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 {
 	use leptos_use::{use_cookie, utils::FromToStringCodec};
 
@@ -36,7 +36,7 @@ pub fn NavBar() -> impl IntoView
 									>
 
 										<div>
-											<LoggedInNavBar/>
+											<LoggedInNavBar set_sidebar_signal=set_sidebar_signal/>
 										</div>
 									</Show>
 								}
@@ -50,25 +50,15 @@ pub fn NavBar() -> impl IntoView
 	}
 }
 
-#[island]
-fn LoggedInNavBar() -> impl IntoView
+#[component]
+fn LoggedInNavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 {
 	let (show_modal, set_show_modal) = create_signal(false);
 
 	view! {
 		<div>
 			<span>
-				<button
-					class="ml-3 w-20"
-					on:click=move |_| {
-						logging::log!("show_modal is {}", show_modal());
-						if show_modal() {
-							set_show_modal.set(false)
-						} else {
-							set_show_modal.set(true)
-						}
-					}
-				>
+				<button class="ml-3 w-20" on:click=move |_| {}>
 
 					<span>
 						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">

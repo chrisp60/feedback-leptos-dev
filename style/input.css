@@ -294,8 +294,13 @@ body
 		@apply dark:bg-surface-500 bg-surface-500 dark:fill-gray-200 fill-amber-400 !important;
 	}
 
-	.side-bar
+	.sidebar
 	{
-		@apply w-20 z-10 !important;
+		@apply fixed z-10 !important;
+	}
+
+	.sidebar-width
+	{
+		@apply w-40 !important;
 	}
 }

@@ -815,9 +815,13 @@ video {
 
 /* Lightswitch */
 
-.side-bar {
+.sidebar {
+  position: fixed !important;
   z-index: 10 !important;
-  width: 5rem !important;
+}
+
+.sidebar-width {
+  width: 10rem !important;
 }
 
 *, ::before, ::after {
@@ -1013,10 +1017,6 @@ video {
 
 .h-5 {
   height: 1.25rem;
-}
-
-.w-16 {
-  width: 4rem;
 }
 
 .w-20 {

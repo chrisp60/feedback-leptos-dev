@@ -8,6 +8,22 @@ pub(crate) mod pages;
 
 use leptos::*;
 
+#[derive(Clone, Debug)]
+pub struct SidebarSignal
+{
+	pub show:     ReadSignal<bool>,
+	pub set_show: WriteSignal<bool>
+}
+
+impl SidebarSignal
+{
+	pub fn new(show: ReadSignal<bool>, set_show: WriteSignal<bool>) -> Self
+	{
+		Self { show,
+		       set_show }
+	}
+}
+
 #[component]
 pub fn App() -> impl IntoView
 {
@@ -29,6 +45,9 @@ pub fn App() -> impl IntoView
 	// Provides context that manages stylesheets, titles, meta tags, etc.
 	provide_meta_context();
 
+	let (sidebar_signal, set_sidebar_signal) = create_signal(false);
+	let sidebar_signal = SidebarSignal::new(sidebar_signal, set_sidebar_signal);
+
 	// Determine if there is a logged in user cookie
 	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
@@ -49,9 +68,9 @@ pub fn App() -> impl IntoView
 		// sets the document title
 		<Title text="Welcome to AppName"/>
 
-		<NavBar/>
+		<NavBar set_sidebar_signal=set_sidebar_signal/>
 
-		<Sidebar sidebar_elements=sidebar_elements/>
+		<Sidebar sidebar_signal=sidebar_signal sidebar_elements=sidebar_elements/>
 
 		// content for this welcome page
 		<Router>

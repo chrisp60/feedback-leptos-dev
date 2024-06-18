@@ -5,27 +5,33 @@ use serde::{Deserialize, Serialize};
 use super::*;
 
 #[component]
-pub fn Sidebar(sidebar_elements: Vec<Rc<SidebarElement>>) -> impl IntoView
+pub fn Sidebar(sidebar_signal: SidebarSignal, sidebar_elements: Vec<Rc<SidebarElement>>) -> impl IntoView
 {
-	let initial_item = sidebar_elements.first()?;
+	let initial_item = sidebar_elements.first().expect("Sidebar elements must have at least one element");
 	provide_context(RwSignal::new(initial_item.clone()));
 
 	let elem_iter = SidebarIter::new(sidebar_elements);
 	let elem_iter_clone = elem_iter.clone();
 
-	Some(view! {
-		<div class="side-bar">
-			<For
-				each=move || elem_iter_clone.clone()
-				key=|element| element.label.clone()
-				let:element
-			>
-				<div class="w-16">
-					<button class="std-btn mt-5">{element.label.clone()}</button>
-				</div>
-			</For>
+	if !sidebar_signal.show.get()
+	{
+		return view! { <div></div> };
+	}
+	view! {
+		<div class="sidebar-width">
+			<div class="sidebar">
+				<For
+					each=move || elem_iter_clone.clone()
+					key=|element| element.label.clone()
+					let:element
+				>
+					<div>
+						<button class="std-btn mt-5">{element.label.clone()}</button>
+					</div>
+				</For>
+			</div>
 		</div>
-	})
+	}
 }
 
 #[derive(Clone)]
