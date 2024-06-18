@@ -1,4 +1,6 @@
 pub mod navbar;
+pub mod sidebar;
+
 #[cfg(feature = "ssr")]
 pub mod state;
 
@@ -9,18 +11,21 @@ use leptos::*;
 #[component]
 pub fn App() -> impl IntoView
 {
+	use std::rc::Rc;
+
 	use leptos_meta::*;
 	use leptos_router::*;
 	use leptos_use::{use_cookie, utils::FromToStringCodec};
+	use sidebar::Sidebar;
 
 	use crate::{app::{navbar::NavBar,
 	                  pages::{dash::dashboard::DashboardPage,
 	                          home::HomePage,
 	                          test::TestPage,
 	                          user::{login::LoginPage, register::RegisterPage},
-	                          NotFound}},
+	                          NotFound},
+	                  sidebar::SidebarElement},
 	            server_fns::user::current::get_current_user};
-
 	// Provides context that manages stylesheets, titles, meta tags, etc.
 	provide_meta_context();
 
@@ -29,6 +34,12 @@ pub fn App() -> impl IntoView
 
 	// Needs to be a blocking resource because we need to wait for the cookie result before use in view
 	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
+	let sidebar_elements: Vec<Rc<SidebarElement>> = vec![
+	                                                     Rc::new(SidebarElement { label: "Employees".to_string(), content: "/emp".to_string() }),
+	                                                     Rc::new(SidebarElement { label: "Departments".to_string(), content: "/deps".to_string() }),
+	                                                     Rc::new(SidebarElement { label: "Profile".to_string(), content: "/user/profile".to_string() }),
+	                                                     Rc::new(SidebarElement { label: "Settings".to_string(), content: "/user/settings".to_string() }),
+	];
 
 	view! {
 		<Stylesheet href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
@@ -39,6 +50,8 @@ pub fn App() -> impl IntoView
 		<Title text="Welcome to AppName"/>
 
 		<NavBar/>
+
+		<Sidebar sidebar_elements=sidebar_elements/>
 
 		// content for this welcome page
 		<Router>

@@ -34,4 +34,5 @@
   "rust-analyzer.check.command": "clippy",
   "rust-analyzer.procMacro.enable": true,
   "rust-analyzer.procMacro.attributes.enable": true,
+  "rust-analyzer.showUnlinkedFileNotification": false,
 }
