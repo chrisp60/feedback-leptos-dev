@@ -8,27 +8,15 @@ pub(crate) mod pages;
 
 use leptos::*;
 
-#[derive(Clone, Debug)]
-pub struct SidebarSignal
+#[derive(Default, Debug, Clone, Copy)]
+pub struct GlobalState
 {
-	pub show:     ReadSignal<bool>,
-	pub set_show: WriteSignal<bool>
-}
-
-impl SidebarSignal
-{
-	pub fn new(show: ReadSignal<bool>, set_show: WriteSignal<bool>) -> Self
-	{
-		Self { show,
-		       set_show }
-	}
+	show_sidebar: bool
 }
 
 #[component]
 pub fn App() -> impl IntoView
 {
-	use std::rc::Rc;
-
 	use leptos_meta::*;
 	use leptos_router::*;
 	use leptos_use::{use_cookie, utils::FromToStringCodec};
@@ -39,26 +27,22 @@ pub fn App() -> impl IntoView
 	                          home::HomePage,
 	                          test::TestPage,
 	                          user::{login::LoginPage, register::RegisterPage},
-	                          NotFound},
-	                  sidebar::SidebarElement},
+	                          NotFound}},
 	            server_fns::user::current::get_current_user};
+
+	// provide_context(create_rw_signal(GlobalState::default()));
+	let sidebar_state = create_rw_signal(false);
+
+	// provide_context(sidebar_state);
+
 	// Provides context that manages stylesheets, titles, meta tags, etc.
 	provide_meta_context();
-
-	let (sidebar_signal, set_sidebar_signal) = create_signal(false);
-	let sidebar_signal = SidebarSignal::new(sidebar_signal, set_sidebar_signal);
 
 	// Determine if there is a logged in user cookie
 	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
 	// Needs to be a blocking resource because we need to wait for the cookie result before use in view
 	let usr = create_blocking_resource(move || access_token.get(), get_current_user);
-	let sidebar_elements: Vec<Rc<SidebarElement>> = vec![
-	                                                     Rc::new(SidebarElement { label: "Employees".to_string(), content: "/emp".to_string() }),
-	                                                     Rc::new(SidebarElement { label: "Departments".to_string(), content: "/deps".to_string() }),
-	                                                     Rc::new(SidebarElement { label: "Profile".to_string(), content: "/user/profile".to_string() }),
-	                                                     Rc::new(SidebarElement { label: "Settings".to_string(), content: "/user/settings".to_string() }),
-	];
 
 	view! {
 		<Stylesheet href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
@@ -68,9 +52,7 @@ pub fn App() -> impl IntoView
 		// sets the document title
 		<Title text="Welcome to AppName"/>
 
-		<NavBar set_sidebar_signal=set_sidebar_signal/>
-
-		<Sidebar sidebar_signal=sidebar_signal sidebar_elements=sidebar_elements/>
+		<NavBar/>
 
 		// content for this welcome page
 		<Router>

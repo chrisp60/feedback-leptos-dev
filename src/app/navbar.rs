@@ -1,7 +1,7 @@
 use super::*;
 
-#[island]
-pub fn NavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
+#[component]
+pub fn NavBar() -> impl IntoView
 {
 	use leptos_use::{use_cookie, utils::FromToStringCodec};
 
@@ -11,13 +11,15 @@ pub fn NavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 	let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
 
 	// Needs to be a local resource so that it only gets created once
-	let usr = create_local_resource(move || access_token.get(), get_current_user);
+	let usr = create_resource(move || access_token.get(), get_current_user);
+
+	let show_signal = create_rw_signal(false);
 
 	view! {
 		<Suspense fallback=move || {
 			view! {
 				<div class="bg-primary-900 text-white">
-					<BurgerPlaceholder/>
+					<div>"Placeholder"</div>
 				</div>
 			}
 		}>
@@ -31,13 +33,12 @@ pub fn NavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 									<Show
 										when=move || rr.is_some()
 										fallback=move || {
-											view! { <BurgerPlaceholder/> }
+											view! { <div>"Placeholder"</div> }
 										}
 									>
 
-										<div>
-											<LoggedInNavBar set_sidebar_signal=set_sidebar_signal/>
-										</div>
+										<NavBarIsland show_signal/>
+
 									</Show>
 								}
 							})
@@ -50,8 +51,27 @@ pub fn NavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 	}
 }
 
+#[island]
+fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
+{
+	use crate::app::sidebar::Sidebar;
+
+	let update_signal = move || show_signal.set(!show_signal.get());
+
+	view! {
+		<div>
+			<button on:click=move |_| update_signal()>"click me"</button>
+		</div>
+		<div>
+			<Show when=move || { show_signal.get() } fallback=|| view! { <div></div> }>
+				<Sidebar/>
+			</Show>
+		</div>
+	}
+}
+
 #[component]
-fn LoggedInNavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
+fn LoggedInNavBar() -> impl IntoView
 {
 	let (show_modal, set_show_modal) = create_signal(false);
 
@@ -60,13 +80,7 @@ fn LoggedInNavBar(set_sidebar_signal: WriteSignal<bool>) -> impl IntoView
 			<span>
 				<button class="ml-3 w-20" on:click=move |_| {}>
 
-					<span>
-						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
-							<rect class="fill-secondary-400" width="100" height="20"></rect>
-							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
-							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
-						</svg>
-					</span>
+					<BurgerGraphic/>
 				</button>
 				// button back to home
 				<a href="/" class="font-bold text-xl text-left ml-3 ">
@@ -86,19 +100,26 @@ fn BurgerPlaceholder() -> impl IntoView
 		<div>
 			<span>
 				<button class="ml-3 w-20">
-
-					<span>
-						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
-							<rect class="fill-secondary-400" width="100" height="20"></rect>
-							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
-							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
-						</svg>
-					</span>
+					<BurgerGraphic/>
 				</button>
-				<a href="/" class="font-bold text-xl text-left ml-3 ">
+				<a href="/" class="font-bold text-xl text-left  ">
 					"AppName"
 				</a>
 			</span>
 		</div>
+	}.into_view()
+}
+
+#[component]
+fn BurgerGraphic() -> impl IntoView
+{
+	view! {
+		<span>
+			<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+				<rect class="fill-secondary-400" width="100" height="20"></rect>
+				<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+				<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+			</svg>
+		</span>
 	}.into_view()
 }

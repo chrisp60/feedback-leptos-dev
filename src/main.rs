@@ -12,7 +12,6 @@ async fn main() -> std::io::Result<()>
 	use ls_service::sea_orm::Database;
 	use migration::{Migrator, MigratorTrait};
 
-	std::env::set_var("RUST_LOG", "debug");
 	tracing_subscriber::fmt::init();
 
 	dotenvy::dotenv().ok();
@@ -41,7 +40,7 @@ async fn main() -> std::io::Result<()>
 		          .service(Files::new("/pkg", format!("{site_root}/pkg")))
 		          // serve other assets from the `assets` directory
 		          .service(Files::new("/assets", site_root))
-		          // serve the favicon from /favicon.ico
+		          // serve the favicon from /favicon.icon
 		          .service(favicon)
 		          .leptos_routes(leptos_options.to_owned(), routes.to_owned(), App)
 		          .app_data(web::Data::new(leptos_options.to_owned()))
