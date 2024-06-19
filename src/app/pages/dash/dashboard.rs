@@ -49,6 +49,7 @@ pub fn DashboardPage() -> impl IntoView
 #[island]
 pub fn DashOptions(user: Option<Usr>) -> impl IntoView
 {
+	// counter example to check functions still work
 	let (counter, set_counter) = use_cookie::<u32, FromToStringCodec>("counter");
 
 	let reset = move || set_counter.set(Some(0));
@@ -60,6 +61,14 @@ pub fn DashOptions(user: Option<Usr>) -> impl IntoView
 
 	let increase = move || {
 		set_counter.set(counter.get().map(|c| c + 1));
+	};
+
+	let decrease = move || {
+		if counter.get() == Some(0)
+		{
+			return;
+		}
+		set_counter.set(counter.get().map(|c| c - 1));
 	};
 
 	let username = user.unwrap().username;
@@ -94,39 +103,28 @@ pub fn DashOptions(user: Option<Usr>) -> impl IntoView
 			<button class="sm-btn mt-3" on:click=move |_| reset()>
 				View Reports
 			</button>
-
-			<div>
-				<button class="std-btn mt-3" on:click=move |_| reset()>
-					Employees
-				</button>
-			</div>
-			<div>
-				<button class="std-btn mt-3" on:click=move |_| increase()>
-					Duties
-				</button>
-			</div>
-			<div>
-				<button class="std-btn mt-3" on:click=move |_| increase()>
-					Profile
-				</button>
-			</div>
-			<div>
-				<button class="std-btn mt-3" on:click=move |_| increase()>
-					Settings
-				</button>
-			</div>
 		</div>
 
 		<div class="mt-10">
 			<p>
-				Counter: {move || counter.get().map(|c| c.to_string()).unwrap_or("—".to_string())}
+				Counter =
+				{move || counter.get().map(|c| c.to_string()).unwrap_or("—".to_string())}
 			</p>
-			<button class="mt-3" on:click=move |_| reset()>
-				Reset
-			</button>
-			<button class="mt-3" on:click=move |_| increase()>
-				+
-			</button>
+			<div>
+				<button class="sm-btn mt-3 h-8 w-28" on:click=move |_| increase()>
+					"Increase counter"
+				</button>
+			</div>
+			<div>
+				<button class="sm-btn mt-3 h-8 w-28" on:click=move |_| decrease()>
+					"Decrease counter"
+				</button>
+			</div>
+			<div>
+				<button class="sm-btn mt-3 h-8 w-28" on:click=move |_| reset()>
+					"Reset"
+				</button>
+			</div>
 		</div>
 	}
 }

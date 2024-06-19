@@ -1,6 +1,5 @@
 pub mod dash;
 pub mod home;
-pub mod test;
 pub mod user;
 
 use leptos::*;

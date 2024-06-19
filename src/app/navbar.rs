@@ -12,7 +12,6 @@ pub fn NavBar() -> impl IntoView
 
 	// Needs to be a local resource so that it only gets created once
 	let usr = create_resource(move || access_token.get(), get_current_user);
-
 	let show_signal = create_rw_signal(false);
 
 	view! {
@@ -48,7 +47,6 @@ pub fn NavBar() -> impl IntoView
 					}}
 
 				</div>
-
 			</div>
 		</Suspense>
 	}
@@ -58,7 +56,6 @@ pub fn NavBar() -> impl IntoView
 fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
 {
 	use crate::app::sidebar::Sidebar;
-
 	let update_signal = move || show_signal.set(!show_signal.get());
 
 	view! {
@@ -95,26 +92,18 @@ fn BurgerPlaceholder() -> impl IntoView
 		<div>
 			<span>
 				<button class="ml-3 mt-0.5">
-					<BurgerGraphic/>
+					<span>
+						<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+							<rect class="fill-secondary-400" width="100" height="20"></rect>
+							<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+							<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+						</svg>
+					</span>
 				</button>
 				<a href="/" class="font-bold text-xl text-left ml-5">
 					"AppName"
 				</a>
 			</span>
 		</div>
-	}.into_view()
-}
-
-#[component]
-fn BurgerGraphic() -> impl IntoView
-{
-	view! {
-		<span>
-			<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
-				<rect class="fill-secondary-400" width="100" height="20"></rect>
-				<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
-				<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
-			</svg>
-		</span>
 	}.into_view()
 }

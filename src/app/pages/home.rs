@@ -22,16 +22,6 @@ pub(crate) fn HomePage() -> impl IntoView
 					"Register"
 				</a>
 			</div>
-
-			<h6 class="txt-tertiary m-t-6">"or"</h6>
-
-			<div class="m-t-6"></div>
-
-			<div class="m-t-6">
-				<a href="/dashboard" class="std-btn">
-					"Dash Page"
-				</a>
-			</div>
 		</div>
 	}
 }
