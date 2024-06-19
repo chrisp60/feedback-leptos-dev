@@ -19,11 +19,11 @@ pub fn NavBar() -> impl IntoView
 		<Suspense fallback=move || {
 			view! {
 				<div class="bg-primary-900 text-white">
-					<div>"Placeholder"</div>
+					<BurgerPlaceholder/>
 				</div>
 			}
 		}>
-			<div class="bg-primary-900 text-white">
+			<div>
 				<div>
 					{move || {
 						usr.get()
@@ -33,12 +33,15 @@ pub fn NavBar() -> impl IntoView
 									<Show
 										when=move || rr.is_some()
 										fallback=move || {
-											view! { <div>"Placeholder"</div> }
+											view! {
+												<div class="bg-primary-900 text-white">
+													<BurgerPlaceholder/>
+												</div>
+											}
 										}
 									>
 
 										<NavBarIsland show_signal/>
-
 									</Show>
 								}
 							})
@@ -59,8 +62,23 @@ fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
 	let update_signal = move || show_signal.set(!show_signal.get());
 
 	view! {
-		<div>
-			<button on:click=move |_| update_signal()>"click me"</button>
+		<div class="bg-primary-900 text-white">
+
+			<div class="flex flex-row">
+				<label for="burger_button" class="ml-3 mt-0.5">
+					<svg viewBox="0 0 100 60" class="dark:fill-gray-400 fill-gray-900 w-5 h-5">
+						<rect class="fill-secondary-400" width="100" height="20"></rect>
+						<rect class="fill-secondary-300" y="30" width="100" height="20"></rect>
+						<rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
+					</svg>
+				</label>
+				<button id="burger_button" on:click=move |_| update_signal()></button>
+
+				<a href="/" class="font-bold text-xl text-left ml-5">
+					"AppName"
+				</a>
+			</div>
+
 		</div>
 		<div>
 			<Show when=move || { show_signal.get() } fallback=|| view! { <div></div> }>
@@ -71,38 +89,15 @@ fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
 }
 
 #[component]
-fn LoggedInNavBar() -> impl IntoView
-{
-	let (show_modal, set_show_modal) = create_signal(false);
-
-	view! {
-		<div>
-			<span>
-				<button class="ml-3 w-20" on:click=move |_| {}>
-
-					<BurgerGraphic/>
-				</button>
-				// button back to home
-				<a href="/" class="font-bold text-xl text-left ml-3 ">
-					"AppName"
-				</a>
-			// tabs for the dashboard (Employees, Departments, etc.)
-
-			</span>
-		</div>
-	}
-}
-
-#[component]
 fn BurgerPlaceholder() -> impl IntoView
 {
 	view! {
 		<div>
 			<span>
-				<button class="ml-3 w-20">
+				<button class="ml-3 mt-0.5">
 					<BurgerGraphic/>
 				</button>
-				<a href="/" class="font-bold text-xl text-left  ">
+				<a href="/" class="font-bold text-xl text-left ml-5">
 					"AppName"
 				</a>
 			</span>
