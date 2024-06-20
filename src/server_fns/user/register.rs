@@ -36,15 +36,16 @@ pub async fn register_user(first_name: String,
 	let usr = Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() };
 	let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
 
-	let reply = anyhow::Result::<String>::Ok(token);
+	let reply = move || -> anyhow::Result<String> { Ok(token) };
+	let r2 = reply.clone();
 
-	if reply.is_err()
+	if reply().is_err()
 	{
 		return Err(ServerFnError::WrappedServerError(UserRegistrationError::DatabaseError));
 	}
 	else
 	{
-		let reply = reply.unwrap();
+		let reply = r2().unwrap();
 
 		let response = expect_context::<ResponseOptions>();
 

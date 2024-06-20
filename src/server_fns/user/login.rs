@@ -18,24 +18,28 @@ pub async fn login(_identity: String, _password: String) -> Result<(), ServerFnE
 	let usr = Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() };
 	let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
 
-	let reply = anyhow::Result::<String>::Ok(token);
+	let reply = move || -> anyhow::Result<String> { Ok(token) };
+	let r2 = reply.clone();
 
-	if reply.is_err()
+	if reply().is_err()
 	{
 		return Err(ServerFnError::WrappedServerError(LoginError::NoUserFound));
 	}
-	let reply = reply.unwrap();
-
-	let response = expect_context::<ResponseOptions>();
-
-	let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(60)).finish();
-
-	if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
+	else
 	{
-		response.insert_header(header::SET_COOKIE, cookie);
-	}
+		let reply = r2().unwrap();
 
-	leptos_actix::redirect("/dashboard");
+		let response = expect_context::<ResponseOptions>();
+
+		let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(10)).finish();
+
+		if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
+		{
+			response.insert_header(header::SET_COOKIE, cookie);
+		}
+
+		leptos_actix::redirect("/dashboard")
+	};
 
 	Ok(())
 }

@@ -35,18 +35,17 @@ pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, Serv
 		let _conn = state.conn;
 
 		// find user by id
-		let user = anyhow::Result::<Option<Usr>>::Ok(Some(Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() }));
-		if user.is_err()
+		let user = move || -> anyhow::Result<Usr> { Ok(Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() }) };
+
+		if user().is_err()
 		{
-			println!("Error finding user");
 			return Err(ServerFnError::WrappedServerError(AuthError::NoUserFound));
 		}
-		let user = user.unwrap();
-		let user = user.unwrap();
+
+		let user = user().unwrap();
 
 		if user.id != data.claims.id || user.email != data.claims.email
 		{
-			println!("User not found {:?}, {:?}, {:?},{:?}", user.id, data.claims.id, user.email, data.claims.email);
 			return Err(ServerFnError::WrappedServerError(AuthError::NoUserFound));
 		}
 
