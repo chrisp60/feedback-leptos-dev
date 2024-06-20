@@ -1269,19 +1269,16 @@ dependencies = [
  "console_error_panic_hook",
  "dotenvy",
  "futures-util",
- "http 1.1.0",
  "jsonwebtoken",
  "leptos",
  "leptos-use",
  "leptos_actix",
  "leptos_meta",
  "leptos_router",
- "log",
  "serde",
  "time",
  "tracing-subscriber",
  "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]
