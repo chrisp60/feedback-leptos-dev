@@ -1,8 +1,0 @@
-pub mod m20240423_000001_create_anniversary_table;
-pub mod m20240424_000001_create_location_table;
-pub mod m20240425_000001_create_pronoun_table;
-pub mod m20240426_000001_create_role_table;
-pub mod m20240427_000001_create_orientation_table;
-pub mod m20240428_000001_create_gender_table;
-pub mod m20240429_000001_create_biography_table;
-pub mod m20240430_000001_create_relationship_table;

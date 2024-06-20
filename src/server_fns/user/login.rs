@@ -1,31 +1,31 @@
 use super::*;
 
 #[server(UserLogin, "/login")]
-pub async fn login(identity: String, password: String) -> Result<(), ServerFnError<LoginError>>
+pub async fn login(_identity: String, _password: String) -> Result<(), ServerFnError<LoginError>>
 {
 	use actix_web::{cookie::{time::Duration, Cookie},
 	                http::{header, header::HeaderValue}};
 	use leptos_actix::ResponseOptions;
-	use ls_service::UserQuery;
 
-	use crate::app::state::AppState;
-
-	println!("Login server function called for {} with {}", identity, password);
+	use crate::{app::{jwt::encode_jwt, state::AppState},
+	            server_fns::user::current::Usr};
 
 	let state = leptos_actix::extract().await;
 	let state: AppState = state.unwrap();
-	let conn = state.conn;
+	let _conn = state.conn;
 
-	let reply = UserQuery::authenticate_user(&conn, &identity, &password).await;
+	// pretending to use database connection to authenticate user
+	let usr = Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() };
+	let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
+
+	let reply = anyhow::Result::<String>::Ok(token);
 
 	if reply.is_err()
 	{
-		println!("Login error: {:?}", reply);
 		return Err(ServerFnError::WrappedServerError(LoginError::NoUserFound));
 	}
 	let reply = reply.unwrap();
 
-	// println!("Login Response: {:?}", reply.clone());
 	let response = expect_context::<ResponseOptions>();
 
 	let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(60)).finish();
@@ -36,8 +36,6 @@ pub async fn login(identity: String, password: String) -> Result<(), ServerFnErr
 	}
 
 	leptos_actix::redirect("/dashboard");
-
-	println!("Login successful, redirecting to dashboard");
 
 	Ok(())
 }

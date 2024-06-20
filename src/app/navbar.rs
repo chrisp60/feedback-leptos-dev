@@ -40,7 +40,7 @@ pub fn NavBar() -> impl IntoView
 										}
 									>
 
-										<NavBarIsland show_signal/>
+										<NavBarIsland _show_signal=show_signal/>
 									</Show>
 								}
 							})
@@ -53,10 +53,10 @@ pub fn NavBar() -> impl IntoView
 }
 
 #[island]
-fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
+fn NavBarIsland(_show_signal: RwSignal<bool>) -> impl IntoView
 {
 	use crate::app::sidebar::Sidebar;
-	let update_signal = move || show_signal.set(!show_signal.get());
+	let update_signal = move || _show_signal.set(!_show_signal.get());
 
 	view! {
 		<div class="bg-primary-900 text-white">
@@ -78,7 +78,7 @@ fn NavBarIsland(show_signal: RwSignal<bool>) -> impl IntoView
 
 		</div>
 		<div>
-			<Show when=move || { show_signal.get() } fallback=|| view! { <div></div> }>
+			<Show when=move || { _show_signal.get() } fallback=|| view! { <div></div> }>
 				<Sidebar/>
 			</Show>
 		</div>

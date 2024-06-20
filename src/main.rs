@@ -1,5 +1,3 @@
-#![allow(clippy::needless_borrows_for_generic_args)]
-
 #[cfg(feature = "ssr")]
 #[actix_web::main]
 async fn main() -> std::io::Result<()>
@@ -8,18 +6,16 @@ async fn main() -> std::io::Result<()>
 	use actix_web::*;
 	use leptos::*;
 	use leptos_actix::{generate_route_list, LeptosRoutes};
-	use leptos_dev::app::{state::AppState, *};
-	use ls_service::sea_orm::Database;
-	use migration::{Migrator, MigratorTrait};
+	use leptos_dev::app::{state::{AppState, DatabaseConnection},
+	                      *};
 
 	tracing_subscriber::fmt::init();
 
 	dotenvy::dotenv().ok();
-	let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+	let _db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
 
-	// establish connection to database and apply migrations
-	let conn = Database::connect(&db_url).await.unwrap();
-	Migrator::up(&conn, None).await.unwrap();
+	// mock connection to database
+	let conn = DatabaseConnection;
 
 	// get configurations
 	let conf = get_configuration(None).await.unwrap();

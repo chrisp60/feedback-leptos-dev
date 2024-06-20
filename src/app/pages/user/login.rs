@@ -54,7 +54,7 @@ fn Log() -> impl IntoView
 		<div class="container mx-auto columns-1 text-center mt-10">
 			<ActionForm action=user_login_action>
 				<div>
-					<label class="input-label" for="identity">
+					<label class="input-label" for="_identity">
 						"Username or Email"
 					</label>
 				</div>
@@ -63,14 +63,14 @@ fn Log() -> impl IntoView
 						class="input-fields"
 						type="text"
 						class="ml-9"
-						name="identity"
-						id="identity"
+						name="_identity"
+						id="_identity"
 						required
 					/>
 				</div>
 
 				<div class="mt-3">
-					<label class="input-label" for="password">
+					<label class="input-label" for="_password">
 						"Password"
 					</label>
 				</div>
@@ -79,8 +79,8 @@ fn Log() -> impl IntoView
 						class="input-fields"
 						type=read_ptype
 						class="ml-10"
-						name="password"
-						id="password"
+						name="_password"
+						id="_password"
 						required
 					/>
 				</div>

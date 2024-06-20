@@ -3,11 +3,9 @@ use super::*;
 #[server]
 pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, ServerFnError<AuthError>>
 {
-	use ls_service::{utils::jwt::decode_jwt, UserQuery};
+	use crate::{app::{jwt::decode_jwt, state::AppState},
+	            server_fns::user::logout::logout_user};
 
-	use crate::{app::state::AppState, server_fns::user::logout::logout_user};
-
-	// println!("get_current_user called with token: {:?}", token);
 	if token.is_none()
 	{
 		Ok(None)
@@ -17,9 +15,10 @@ pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, Serv
 		let token = token.unwrap();
 
 		// decode token and get user id and email from it
-		let data = decode_jwt(token); // .expect("Could not decode JWT");
+		let data = decode_jwt(token);
 		if data.is_err()
 		{
+			print!("Error decoding token - logging out");
 			let _ = logout_user().await;
 			return Ok(None);
 		}
@@ -33,12 +32,13 @@ pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, Serv
 		}
 
 		let state: AppState = state.unwrap();
-		let conn = state.conn;
+		let _conn = state.conn;
 
 		// find user by id
-		let user = UserQuery::find_user_by_id(&conn, data.claims.id).await;
+		let user = anyhow::Result::<Option<Usr>>::Ok(Some(Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() }));
 		if user.is_err()
 		{
+			println!("Error finding user");
 			return Err(ServerFnError::WrappedServerError(AuthError::NoUserFound));
 		}
 		let user = user.unwrap();
@@ -46,6 +46,7 @@ pub async fn get_current_user(token: Option<String>) -> Result<Option<Usr>, Serv
 
 		if user.id != data.claims.id || user.email != data.claims.email
 		{
+			println!("User not found {:?}, {:?}, {:?},{:?}", user.id, data.claims.id, user.email, data.claims.email);
 			return Err(ServerFnError::WrappedServerError(AuthError::NoUserFound));
 		}
 

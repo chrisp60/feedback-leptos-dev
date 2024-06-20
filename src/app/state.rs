@@ -1,6 +1,5 @@
 use actix_web::FromRequest;
 use futures_util::future::{ok, Ready};
-use ls_service::sea_orm::DatabaseConnection;
 
 #[derive(Debug, Clone)]
 pub struct AppState
@@ -20,3 +19,7 @@ impl FromRequest for AppState
 		ok(data.get_ref().clone())
 	}
 }
+
+// mock db
+#[derive(Debug, Clone)]
+pub struct DatabaseConnection;

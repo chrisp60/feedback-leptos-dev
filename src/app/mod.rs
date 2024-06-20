@@ -1,3 +1,5 @@
+#[cfg(feature = "ssr")]
+pub mod jwt;
 pub mod navbar;
 pub mod sidebar;
 

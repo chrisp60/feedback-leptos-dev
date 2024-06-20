@@ -9,23 +9,12 @@ pub async fn register_user(first_name: String,
                            password: String)
                            -> Result<i32, ServerFnError<UserRegistrationError>>
 {
-	println!("Register server function called for {} {} {} {} {} {}", first_name, last_name, username, email, date_of_birth, password);
 	use actix_web::{cookie::{time::Duration, Cookie},
 	                http::{header, header::HeaderValue}};
 	use chrono::NaiveDate;
 	use leptos_actix::ResponseOptions;
-	use ls_entity::user;
-	use ls_service::{UserMutation, UserQuery};
 
 	use crate::app::state::AppState;
-
-	// println!("Server Function Register");
-	// println!("First Name: {}", first_name);
-	// println!("Last Name: {}", last_name);
-	// println!("Username: {}", username);
-	// println!("Email: {}", email);
-	// println!("Date of Birth: {}", date_of_birth);
-	// println!("Password: {}", password);
 
 	// check inputs are valid
 	let checks = check_inputs(first_name.clone(), last_name.clone(), username.clone(), email.clone(), date_of_birth.clone(), password.clone()).await;
@@ -36,62 +25,32 @@ pub async fn register_user(first_name: String,
 
 	let state = leptos_actix::extract().await;
 	let state: AppState = state.unwrap();
-	let conn = state.conn;
+	let _conn = state.conn;
 
 	let dob = NaiveDate::parse_from_str(&date_of_birth.clone(), "%Y-%m-%d").unwrap();
 
-	let form = user::RegisterUserModel { username: username.clone(),
-	                                     first_name,
-	                                     last_name,
-	                                     email: email.clone(),
-	                                     date_of_birth: dob,
-	                                     password: password.clone() };
+	let _form = format!("{:?},{:?},{:?},{:?},{:?},{:?}", username.clone(), first_name, last_name, email.clone(), dob, password.clone());
 
-	let create_reply = UserMutation::create_new_user(&conn, form).await;
+	// pretending to use database connection to create user
+	let _create_reply = anyhow::Result::<i32>::Ok(1);
 
-	let mut id: i32 = -1;
+	let id: i32 = -1;
 
-	if create_reply.is_err()
-	{
-		let error = create_reply.err().unwrap();
-		match error
-		{
-			ls_service::sea_orm::DbErr::Query(db_error) =>
-			{
-				let error = db_error.to_string();
-				if error.contains("username")
-				{
-					return Err(ServerFnError::WrappedServerError(UserRegistrationError::UsernameAlreadyInUse));
-				}
-				else if error.contains("email")
-				{
-					return Err(ServerFnError::WrappedServerError(UserRegistrationError::EmailAlreadyInUse));
-				}
-			}
-			_ => return Err(ServerFnError::WrappedServerError(UserRegistrationError::DatabaseError))
-		}
-	}
-	else if let migration::sea_orm::ActiveValue::Set(value) = create_reply.unwrap().id
-	{
-		id = value;
-	}
+	// pretending to use database connection to authenticate user
+	let reply: anyhow::Result<String> = anyhow::Result::<String>::Ok("id, email".to_string());
 
-	let reply = UserQuery::authenticate_user(&conn, &username, &password).await;
 	if reply.is_err()
 	{
-		// println!("Error: {}", reply);
 		return Err(ServerFnError::WrappedServerError(UserRegistrationError::DatabaseError));
 	}
 	else
 	{
 		let reply = reply.unwrap();
 
-		// println!("Reply: {:?}", reply);
 		let response = expect_context::<ResponseOptions>();
 
 		let cookie = Cookie::build("leptos_access_token", reply.clone()).path("/").http_only(true).max_age(Duration::minutes(10)).finish();
 
-		println!("Registration is setting up cookie");
 		if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str())
 		{
 			response.insert_header(header::SET_COOKIE, cookie);
