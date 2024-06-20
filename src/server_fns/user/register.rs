@@ -14,7 +14,8 @@ pub async fn register_user(first_name: String,
 	use chrono::NaiveDate;
 	use leptos_actix::ResponseOptions;
 
-	use crate::app::state::AppState;
+	use crate::{app::{jwt::encode_jwt, state::AppState},
+	            server_fns::user::current::Usr};
 
 	// check inputs are valid
 	let checks = check_inputs(first_name.clone(), last_name.clone(), username.clone(), email.clone(), date_of_birth.clone(), password.clone()).await;
@@ -31,13 +32,11 @@ pub async fn register_user(first_name: String,
 
 	let _form = format!("{:?},{:?},{:?},{:?},{:?},{:?}", username.clone(), first_name, last_name, email.clone(), dob, password.clone());
 
-	// pretending to use database connection to create user
-	let _create_reply = anyhow::Result::<i32>::Ok(1);
-
-	let id: i32 = -1;
-
 	// pretending to use database connection to authenticate user
-	let reply: anyhow::Result<String> = anyhow::Result::<String>::Ok("id, email".to_string());
+	let usr = Usr { id: 1, username: "test".to_string(), email: "test@gmail.com".to_string() };
+	let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
+
+	let reply = anyhow::Result::<String>::Ok(token);
 
 	if reply.is_err()
 	{
@@ -59,7 +58,7 @@ pub async fn register_user(first_name: String,
 		leptos_actix::redirect("/dashboard")
 	};
 
-	Ok(id)
+	Ok(usr.id)
 }
 
 #[derive(Debug, Clone)]
