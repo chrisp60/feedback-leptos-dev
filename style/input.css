@@ -15,7 +15,7 @@ body
 {
 	h1
 	{
-		@apply text-2xl sm:text-3xl font-bold my-10 !important;
+		@apply text-2xl sm:text-3xl font-bold !important;
 	}
 
 	h2
@@ -184,7 +184,15 @@ body
 	}
 
 	/* Margins */
+	.m-b-1
+	{
+		@apply mb-1 !important;
+	}
 
+	.m-t-1
+	{
+		@apply mt-1 !important;
+	}
 
 	.m-b-2
 	{
@@ -304,5 +312,15 @@ body
 	.sidebar-width
 	{
 		@apply w-40 !important;
+	}
+
+	.darkmode-toggle
+	{
+		@apply w-11 h-7 bg-surface-400 dark:bg-surface-950 rounded-full border-2 border-tertiary-700 dark:border-tertiary-500 p-0 !important;
+	}
+
+	.darkmode-toggle-position
+	{
+		@apply absolute right-0 top-0 !important;
 	}
 }

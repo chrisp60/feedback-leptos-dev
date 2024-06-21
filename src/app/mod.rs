@@ -1,22 +1,24 @@
 #[cfg(feature = "ssr")]
 pub mod jwt;
-pub mod navbar;
-pub mod sidebar;
-
 #[cfg(feature = "ssr")]
 pub mod state;
 
+pub mod dark_mode;
+pub mod navbar;
 pub mod pages;
+pub mod sidebar;
+
 use leptos::*;
+use leptos_meta::*;
+use leptos_router::*;
 
 #[component]
 pub fn App() -> impl IntoView
 {
-	use leptos_meta::*;
-	use leptos_router::*;
 	use leptos_use::{use_cookie, utils::FromToStringCodec};
 
-	use crate::{app::{navbar::NavBar,
+	use crate::{app::{dark_mode::DarkModeToggle,
+	                  navbar::NavBar,
 	                  pages::{dash::dashboard::DashboardPage,
 	                          home::HomePage,
 	                          user::{login::LoginPage, register::RegisterPage},
@@ -38,7 +40,14 @@ pub fn App() -> impl IntoView
 		// sets the document title
 		<Title text="Welcome to AppName"/>
 
-		<NavBar/>
+		<div class="flex flex-row bg-primary-900 dark:text-primary-300">
+			<div class="">
+				<NavBar/>
+			</div>
+			<div class="darkmode-toggle-position">
+				<DarkModeToggle/>
+			</div>
+		</div>
 
 		// content for this welcome page
 		<Router>
