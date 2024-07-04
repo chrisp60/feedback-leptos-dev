@@ -1,60 +1,9 @@
 use super::*;
 
-#[component]
-pub fn NavBar() -> impl IntoView {
-    use leptos_use::{use_cookie, utils::FromToStringCodec};
-
-    use crate::server_fns::user::current::get_current_user;
-
-    // Determine if there is a logged in user cookie
-    let (access_token, _) = use_cookie::<String, FromToStringCodec>("leptos_access_token");
-
-    // Needs to be a local resource so that it only gets created once
-    let usr = create_resource(move || access_token.get(), get_current_user);
-    let show_signal = create_rw_signal(false);
-
-    view! {
-        <Suspense fallback=move || {
-            view! {
-                <div class="bg-primary-900 text-white">
-                    <BurgerPlaceholder/>
-                </div>
-            }
-        }>
-            <div>
-                <div>
-                    {move || {
-                        usr.get()
-                            .map(|data| {
-                                let rr = data.unwrap();
-                                view! {
-                                    <Show
-                                        when=move || rr.is_some()
-                                        fallback=move || {
-                                            view! {
-                                                <div class="bg-primary-900 text-white">
-                                                    <BurgerPlaceholder/>
-                                                </div>
-                                            }
-                                        }
-                                    >
-
-                                        <NavBarIsland _show_signal=show_signal/>
-                                    </Show>
-                                }
-                            })
-                    }}
-
-                </div>
-            </div>
-        </Suspense>
-    }
-}
-
 #[island]
-fn NavBarIsland(_show_signal: RwSignal<bool>) -> impl IntoView {
+pub fn NavBar() -> impl IntoView {
     use crate::app::sidebar::Sidebar;
-    let update_signal = move || _show_signal.set(!_show_signal.get());
+    let showing = RwSignal::<bool>::default();
 
     view! {
         <div class="flex flex-row">
@@ -65,25 +14,23 @@ fn NavBarIsland(_show_signal: RwSignal<bool>) -> impl IntoView {
                     <rect class="fill-secondary-400" y="60" width="100" height="20"></rect>
                 </svg>
             </label>
-            <button id="burger_button" on:click=move |_| update_signal()></button>
+            <button id="burger_button" on:click=move |_| showing.set(!showing.get())></button>
 
             <a href="/" class="font-bold text-xl text-left ml-5">
                 "AppName"
             </a>
         </div>
 
-        <div>
-            <Show when=move || { _show_signal.get() } fallback=|| view! { <div></div> }>
-                <Sidebar/>
-            </Show>
-        </div>
+        <Show when=showing>
+            <Sidebar/>
+        </Show>
     }
 }
 
 #[component]
 fn BurgerPlaceholder() -> impl IntoView {
     view! {
-        <div>
+        <div class="bg-primary-900 text-white">
             <span>
                 <button class="ml-3 mt-0.5">
                     <span>
@@ -100,5 +47,4 @@ fn BurgerPlaceholder() -> impl IntoView {
             </span>
         </div>
     }
-    .into_view()
 }
