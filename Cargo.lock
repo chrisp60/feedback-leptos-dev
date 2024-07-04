@@ -1277,6 +1277,7 @@ dependencies = [
  "leptos_router",
  "serde",
  "time",
+ "tracing",
  "tracing-subscriber",
  "wasm-bindgen",
 ]
