@@ -13,7 +13,7 @@ impl FromRequest for AppState {
     fn from_request(req: &actix_web::HttpRequest, _: &mut actix_web::dev::Payload) -> Self::Future {
         let data = req
             .app_data::<actix_web::web::Data<AppState>>()
-            .expect("Could not get data from request");
+            .expect("AppState provided through Data");
 
         ok(data.get_ref().clone())
     }
