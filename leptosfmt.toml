@@ -1,5 +1,5 @@
-max_width              = 160
-tab_spaces             = 4
-indentation_style      = "Tabs"
-newline_style          = "Unix"
-attr_value_brace_style = "Always"
+# max_width              = 160
+# tab_spaces             = 4
+# indentation_style      = "Tabs"
+# newline_style          = "Unix"
+# attr_value_brace_style = "Always"
