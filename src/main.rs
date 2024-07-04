@@ -9,8 +9,21 @@ async fn main() -> std::io::Result<()> {
         state::{AppState, DatabaseConnection},
         *,
     };
+    use tracing_subscriber::EnvFilter;
 
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            // (chrisp60): at __runtime__, check if the RUST_LOG env variable is set with a valid
+            // env filter directive for tracing, if one is found use it. If not, proceed to closure
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                // (chrisp60): at compile time, read the cargo env variable to get the name of this
+                // crate, append =trace to it to enable trace level spans.
+                concat!(env!("CARGO_CRATE_NAME"), "=trace")
+                    .parse()
+                    .expect("valid envfilter")
+            }),
+        )
+        .init();
 
     dotenvy::dotenv().ok();
     let _db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
