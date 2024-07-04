@@ -1,5 +1,8 @@
 pub mod app;
+pub mod error;
 pub mod server_fns;
+
+pub use error::{env_or_error, Error, Result};
 
 use wasm_bindgen::prelude::wasm_bindgen;
 

@@ -1,6 +1,6 @@
 #[cfg(feature = "ssr")]
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> leptos_dev::Result<()> {
     use actix_files::Files;
     use actix_web::*;
     use leptos::*;
@@ -25,14 +25,21 @@ async fn main() -> std::io::Result<()> {
         )
         .init();
 
-    dotenvy::dotenv().ok();
-    let _db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+    match dotenvy::dotenv() {
+        Ok(dotenvy_path) => {
+            tracing::trace!(env.dotenv = dotenvy_path.display().to_string())
+        }
+        Err(err) => {
+            tracing::error!(env.dotenv = err.to_string())
+        }
+    }
+    let _db_url = leptos_dev::env_or_error("DATABASE_URL")?;
 
     // mock connection to database
     let conn = DatabaseConnection;
 
     // get configurations
-    let conf = get_configuration(None).await.unwrap();
+    let conf = get_configuration(None).await?;
     let addr = conf.leptos_options.site_addr;
 
     // Generate the list of routes in your Leptos App
@@ -71,6 +78,7 @@ async fn main() -> std::io::Result<()> {
     .bind(&addr)?
     .run()
     .await
+    .map_err(Into::into) // Coercing to our error type (crate::error::Error)
 }
 
 #[cfg(feature = "ssr")]
