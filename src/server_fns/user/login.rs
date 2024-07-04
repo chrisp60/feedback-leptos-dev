@@ -1,17 +1,16 @@
+use crate::app::jwt::Claims;
+
 use super::*;
 
 #[server(UserLogin, "/login")]
-pub async fn login(_identity: String, _password: String) -> Result<(), ServerFnError<LoginError>> {
+pub async fn login(_identity: String, _password: String) -> Result<Option<()>, ServerFnError> {
     use actix_web::{
         cookie::{time::Duration, Cookie},
         http::{header, header::HeaderValue},
     };
     use leptos_actix::ResponseOptions;
 
-    use crate::{
-        app::{jwt::encode_jwt, state::AppState},
-        server_fns::user::current::Usr,
-    };
+    use crate::{app::state::AppState, server_fns::user::current::Usr};
 
     let state = leptos_actix::extract().await;
     let state: AppState = state.unwrap();
@@ -23,32 +22,32 @@ pub async fn login(_identity: String, _password: String) -> Result<(), ServerFnE
         username: "test".to_string(),
         email: "test@gmail.com".to_string(),
     };
-    let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
+    let token = Claims::try_from((usr.email.clone(), usr.id))
+        .and_then(Claims::encode)
+        .map_err(ServerFnError::new)?;
 
     let reply = move || -> anyhow::Result<String> { Ok(token) };
     let r2 = reply.clone();
 
-    if reply().is_err() {
-        return Err(ServerFnError::WrappedServerError(LoginError::NoUserFound));
-    } else {
-        let reply = r2().unwrap();
-
-        let response = expect_context::<ResponseOptions>();
-
-        let cookie = Cookie::build("leptos_access_token", reply.clone())
-            .path("/")
-            .http_only(true)
-            .max_age(Duration::minutes(10))
-            .finish();
-
-        if let Ok(cookie) = HeaderValue::from_str(cookie.to_string().as_str()) {
-            response.insert_header(header::SET_COOKIE, cookie);
-        }
-
-        leptos_actix::redirect("/dashboard")
+    let Ok(reply) = r2() else {
+        return Ok(None);
     };
 
-    Ok(())
+    let response = expect_context::<ResponseOptions>();
+
+    let cookie = Cookie::build("leptos_access_token", reply.clone())
+        .path("/")
+        .http_only(true)
+        .max_age(Duration::minutes(10))
+        .finish();
+
+    if let Ok(cookie) = HeaderValue::from_str(&cookie.to_string()) {
+        response.insert_header(header::SET_COOKIE, cookie);
+    }
+
+    leptos_actix::redirect("/dashboard");
+
+    Ok(Some(()))
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

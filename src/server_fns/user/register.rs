@@ -1,3 +1,5 @@
+use crate::app::jwt::Claims;
+
 use super::*;
 
 #[server(RegisterUser, "/register")]
@@ -16,10 +18,7 @@ pub async fn register_user(
     use chrono::NaiveDate;
     use leptos_actix::ResponseOptions;
 
-    use crate::{
-        app::{jwt::encode_jwt, state::AppState},
-        server_fns::user::current::Usr,
-    };
+    use crate::{app::state::AppState, server_fns::user::current::Usr};
 
     // check inputs are valid
     let checks = check_inputs(
@@ -57,7 +56,7 @@ pub async fn register_user(
         username: "test".to_string(),
         email: "test@gmail.com".to_string(),
     };
-    let token = encode_jwt(usr.email.clone(), usr.id).expect("Could not encode JWT");
+    let token = Claims::try_from((usr.email.clone(), usr.id)).and_then(Claims::encode)?;
 
     let reply = move || -> anyhow::Result<String> { Ok(token) };
     let r2 = reply.clone();
