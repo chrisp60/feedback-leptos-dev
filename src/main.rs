@@ -24,7 +24,18 @@ async fn main() -> std::io::Result<()> {
 
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
-    println!("listening on http://{}", &addr);
+    // (chrisp60): already have a tracing-subscriber setup.
+    // we can use traces instead of printlns. Logs will look a lot better
+    // and can be more flexible with use of tracing's configurations
+    //
+    // Docs: https://docs.rs/tracing/latest/tracing/#using-the-macros
+    // - % = use the implementation of std::fmt::Display to record this value.
+    // - Logs will show as "server.addr = [address value]"
+    // - For simple things, println is fine. But, there is an implicit cost to setting up a
+    // suscriber so you might as well use it. Also, there is a possibly larger cost to using
+    // println!, as each call to each needs to hold a lock on stdin. This can have implications for
+    // code that is aiming to be highly performant in an async context.
+    tracing::info!(server.addr = %addr);
 
     let state = AppState { conn };
 

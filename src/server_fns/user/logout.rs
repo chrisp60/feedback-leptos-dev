@@ -11,7 +11,8 @@ pub async fn logout_user() -> Result<(), ServerFnError<LogOutError>> {
     };
     use leptos_actix::ResponseOptions;
 
-    println!("Logging out");
+    // (chrisp60): see note @ src/main.rs
+    tracing::info!("Logging out");
     let response = expect_context::<ResponseOptions>();
     let cookie = Cookie::build("leptos_access_token", "".to_string())
         .path("/")

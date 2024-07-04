@@ -17,7 +17,6 @@ pub async fn get_current_user(
         // decode token and get user id and email from it
         let data = decode_jwt(token);
         if data.is_err() {
-            print!("Error decoding token - logging out");
             let _ = logout_user().await;
             return Ok(None);
         }
